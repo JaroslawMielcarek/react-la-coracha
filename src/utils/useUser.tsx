@@ -29,7 +29,7 @@ const getLocalStoreUser = () => {
 }
 
 export const useUser = () => {
-  const [userP, sendData] = useFetch({ errorTitle: "User login" })
+  const [userP, sendData] = useFetch({url:'', errorTitle: "User login" })
 
   const [user, setUser] = useState<UserType | null>(getLocalStoreUser())
   
@@ -41,6 +41,7 @@ export const useUser = () => {
   
   useEffect(() => {
     window.addEventListener("storage", linkUser)
+    linkUser()
     return () => {
       window.removeEventListener("storage", linkUser)
     }

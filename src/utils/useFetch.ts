@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { NotificationContext } from "components/notification/useNotificationState";
 
 
-const API_URL = `https://lacoracha-backend.azurewebsites.net/api/`
+const API_URL = `https://lacoracha-backend.azurewebsites.net/api/`// 'http://192.168.100.8:8080/api/' //
 
 interface State<T> {
   data?: T
@@ -44,9 +44,9 @@ export function useFetch<T>({url, initialPayload, options, errorTitle}: TUseFetc
   const [fetchState, dispatch] = useReducer(fetchReducer, initialState)
   const {setNotification} = useContext(NotificationContext)
 
-  useEffect(() => {
-    console.log(url, {fetchState})
-  },[fetchState, url])
+  // useEffect(() => {
+  //   console.log(url, {fetchState})
+  // },[fetchState, url])
 
   useEffect(() => {
     if (fetchState.error) {
@@ -81,6 +81,7 @@ export function useFetch<T>({url, initialPayload, options, errorTitle}: TUseFetc
 
   const fetchData = useCallback(async (url: string | undefined, payload?: any) => {
     if (!url) return null
+    console.log(API_URL + url)
     return axios.post(API_URL + url, payload || {}, { headers: authHeader(), timeout: 5000 })
     .then( response => {
       const data = response.data as T
@@ -91,12 +92,12 @@ export function useFetch<T>({url, initialPayload, options, errorTitle}: TUseFetc
 
   useEffect(() => {
     fetchData(url, initialPayload)
-  },[url, fetchData, initialPayload])
+  },[url])
 
   const sendData = (sendDataUrl: string, payload: any, headers?: { [key: string]: string }) => {
     return axios.post(API_URL + sendDataUrl, payload, { headers: headers || authHeader(), timeout: 5000 })
       .then( response => {
-        console.log({response})
+        console.log(API_URL + sendDataUrl , { response})
         if (response.data) {
           if (response.data.message) {
             if (url) fetchData(url, initialPayload)
