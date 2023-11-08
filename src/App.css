@@ -1,38 +1,210 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  line-height: 1.2em;
+  box-sizing: border-box;
+  vertical-align: baseline;
+}
+
+@font-face {
+  font-family: "Lato";
+  font-weight: 900;
+  src: url("assets/fonts/Lato-Black.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lato";
+  font-weight: 700;
+  src: url("assets/fonts/Lato-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lato";
+  font-weight: 400;
+  src: url("assets/fonts/Lato-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lato";
+  font-weight: 200;
+  src: url("assets/fonts/Lato-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lato";
+  font-weight: 100;
+  src: url("assets/fonts/Lato-Thin.ttf") format("truetype");
+}
+ul { list-style: none; }
+
+li, a { text-decoration: none; }
+
+a { cursor: pointer; color: var(--text); font-size: inherit; }
+a:hover { color: var(--blueLight); }
+/* a:visited { color: inherit; } */
+
+body {
+  background: #f9f9f9;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #372b47;
+}
+
+
+p {
+  line-height: 1.375rem;
+  font-size: 0.9375rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 3rem 0 1.38rem;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 2.441rem;
+}
+
+h2 {
+  font-size: 1.953rem;
+}
+
+h3 {
+  font-size: 1.563rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+  margin: 1.5rem 0 1.2rem;
+}
+
+h5 {
+  font-size: 1.1rem;
+  margin: 1.1rem 0 1rem;
+  color: rgba(76, 0, 237, 0.6);
+}
+b.closeToLimit {
+  color: var(--dangerous)
+}
+:root{
+  --borderRadius: 4px;
+
+}
+
+/* label {
+  margin-right: 1ch;
+} */
+input {
+  padding: 0.25em 0.5em;
+  border-radius: var(--borderRadius);
+  width: 100%;
+}
+
+input:valid {
+  border: 1px solid var(--valid);
+}
+input:invalid {
+  border: 1px solid var(--dangerous);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+  /* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+textarea {
+  display: flex;
+  border: 1px solid var(--blueLight);
+  width: 100%;
+  min-height: 3rem;
+  max-height: 5rem;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: flex-start;
+}
+.no-data {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.extra-message {
+  font-size: 0.825em;
+  display: block;
+  font-style: italic;
+  color: var(--blueMedium);
+  text-wrap: wrap;
+  /* margin-bottom: 16px; */
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.extra-message.red {
+  color: var(--dangerous);
 }
-
-.App-header {
-  background-color: #282c34;
+.extra-message * {
+  font-size: inherit;
+  color: inherit;
+}
+.extra-message a {
+  font-weight: bolder;
+}
+.extra-message.inline-extra {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 1.025em;
+}
+.App {
+  padding-bottom: 44px;
   min-height: 100vh;
+}
+.page {
+  min-height: 100vh;
+}
+.manager > * {
+  margin-bottom: 16px;
+}
+
+
+.column .date {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+}
+.column .date .day:after,
+.column .date .month::after {
+  content: "/";
+  margin: 0 2px;
+} 
+.flex-group {
+  display: flex;
 }
 
-.App-link {
-  color: #61dafb;
+#login,
+#signup,
+#forget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media screen and (max-width: 992px) {
+  .column .date .month::after {
+    display: none;
   }
-  to {
-    transform: rotate(360deg);
+  .column .date .year {
+    display: none;
+  }
+  .column .time {
+    font-size: smaller;
   }
 }
