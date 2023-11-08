@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { NotificationContext } from "components/notification/useNotificationState";
 
 
-const API_URL = 'http://192.168.100.8:8080/api/' //`https://lacoracha-backend.azurewebsites.net/api/`
+const API_URL = `https://lacoracha-backend.azurewebsites.net/api/`
 
 interface State<T> {
   data?: T
