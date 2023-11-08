@@ -12,7 +12,7 @@ import Modal from "components/modal/Modal"
 export default function Forgot () {
   const navigate = useNavigate()
   const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState({})
-  const [userData, sendData] = useFetch({url: "", errorTitle: "Forgot"})
+  const [ , sendData] = useFetch({url: "", errorTitle: "Forgot"})
   const [ loading, setLoading ] = useState(false)
   const [ showModal, setShowModal ] = useState(false)
 

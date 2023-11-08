@@ -11,7 +11,7 @@ import { useState } from "react"
 export default function Reset () {
   const navigate = useNavigate()
   const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState({})
-  const [userData, sendData] = useFetch({url: "", errorTitle: "Reset"})
+  const [ , sendData] = useFetch({url: "", errorTitle: "Reset"})
   const [ loading, setLoading ] = useState(false)
   const [ searchParams ] = useSearchParams()
 

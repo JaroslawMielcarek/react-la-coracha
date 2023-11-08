@@ -379,7 +379,7 @@ const AutomaticActions = () => {
 }
 
 const AddMembershipFeeToTeamMembers = () => {
-  const [ monthly, sendData] = useFetch({ url:"", errorTitle: "Monthly Payments" })
+  const [ , sendData] = useFetch({ url:"", errorTitle: "Monthly Payments" })
   const [ membershipFee, setMembershipFee ] = useState(30)
   
   const handleAddMensualidadToTeamMembers = () => {
