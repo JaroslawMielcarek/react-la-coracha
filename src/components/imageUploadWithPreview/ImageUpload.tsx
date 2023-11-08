@@ -36,7 +36,7 @@ export const ImagePreviewWithForm = (props: TImagePreviewWithFormProps) => {
 
   useEffect(() => {
     if (props.validators) registerInput(props.name, props.validators)
-  },[props.validators, props.name, registerInput])
+  },[])
 
   const onClick = (val: IImage | File) => {
     if (props.onClick) return props.onClick(props.name, val)
@@ -105,7 +105,7 @@ export const FileUploadWithForm = (props: TFileUploadWithFormProps ) => {
 
   useEffect(() => {
     if (props.validators) registerInput(props.name, props.validators)
-  },[props.validators, props.name, registerInput])
+  },[])
 
   const onChange = (val: File) => {
     if (props.onChange) return props.onChange(props.name, val)

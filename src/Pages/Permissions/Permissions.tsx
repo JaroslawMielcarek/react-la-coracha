@@ -25,7 +25,7 @@ export const Permissions = () => {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged, navigate])
+  },[isLogged])
 
  return (
     <section>

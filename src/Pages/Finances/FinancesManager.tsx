@@ -23,7 +23,7 @@ export const FinanceManager = () => {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged, navigate])
+  },[isLogged])
 
   return (
     <section>
@@ -184,7 +184,7 @@ const PlayersPayments = () => {
       default:
         return setList(players)
     }
-  },[selectedFilter, players, selectedPlayer])
+  },[selectedFilter, players])
 
   const handleEdit = (player: TPlayer) => setSelectedPlayer(player)
   

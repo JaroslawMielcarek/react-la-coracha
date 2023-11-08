@@ -36,7 +36,7 @@ export default function Profile () {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged, navigate])
+  },[isLogged])
 
   const renderBalance = () => {
     const klass = userData && userData?.balance && userData?.balance < 0 ? "amount under" : "amount"

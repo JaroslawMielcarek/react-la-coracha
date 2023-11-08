@@ -19,7 +19,7 @@ export default function Login () {
     setLoading(false)
     if (isLogged()) return navigate("/")
 
-  },[isLogged, navigate])
+  },[isLogged])
 
   const renderSubmitButton = () => {
     const klass = loading ? "btn color full-width disabled"  : "btn color full-width"

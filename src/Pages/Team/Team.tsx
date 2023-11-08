@@ -20,7 +20,7 @@ export const Team = () => {
 
   useEffect(() => {
     hasPermision ? fetchData("user/getTeam", { name: teamName }) : fetchData("public/getTeam", { name: teamName } )
-  }, [teamName, fetchData, hasPermision])
+  }, [teamName])
 
   
   const renderPlayers = () => {
