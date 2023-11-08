@@ -1,0 +1,73 @@
+
+/*** btn ***/
+.btn {
+  padding: 0.4em 0.8em;
+  border: 1px solid rgba(76, 0, 237, 0.2);
+  border-radius: var(--borderRadius);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all ease-in-out 0.125s;
+  vertical-align: baseline;
+  line-height: 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+.btn:active {
+  transform: scale(0.94);
+}
+.btn.disabled, .btn.color.disabled, .btn.color.red.disabled, .btn.color.white.disabled {
+  /* cursor: inherit; */
+  background-color: var(--blueLight);
+  color: var(--greyMedium);
+  pointer-events: none;
+}
+.btn.disabled:hover, .btn.color.disabled:hover, .btn.color.red.disabled:hover, .btn.color.white.disabled:hover {
+  background-color: var(--blueLight);
+}
+.btn.white {
+  background-color: #ffffff;
+  color: rgb(76, 0, 237);
+}
+.btn.color {
+  background-color: rgb(76, 0, 237);
+  color: #ffffff;
+}
+.btn.color:hover {
+  background-color: rgba(76, 0, 237, 0.8);
+}
+.btn.color.red {
+  background-color: #d64f4f;
+  color: #ffffff;
+}
+.btn.color.red:hover {
+  background-color: rgba(214, 79, 79, 0.8);
+}
+.btn.color.red.red:disabled {
+  cursor: initial;
+  background-color: rgba(214, 79, 79, 0.1);
+}
+.btn.color.red.red:disabled:hover {
+  background-color: rgba(214, 79, 79, 0.1);
+}
+.btn.text {
+  display: inline-block;
+  border: none;
+  margin: 0 2ch;
+}
+.btn.text.red {
+  color: var(--dangerous)
+}
+.btn.danger {
+  background-color: #d64f4f;
+  color: #ffffff;
+}
+.btn.danger:hover {
+  background-color: rgba(214, 79, 79, 0.8);
+}
+.btn.full-width {
+  width: 100%;
+}
+
+.btn input {
+  display: none;
+}

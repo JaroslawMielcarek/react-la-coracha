@@ -1,0 +1,169 @@
+
+#alignment{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* width: max-content; */
+  /* margin: 0 auto; */
+}
+
+#playersList{
+  display: grid;
+  grid-template-columns: repeat(10, 38px);
+  grid-template-rows: 40px repeat(3, 48px) 108px repeat(2, 48px) 24px 96px;
+  max-width: 380px;
+  position: relative;
+  grid-template-areas:
+    " .     .     .           .     .     .       .     .     .       . "
+    " .     .     .           .   libero libero   .     .     .       . "
+    " . colocador colocador   .   libero libero   . exterior exterior . "
+    " . colocador colocador   .     .     .       . exterior exterior . "
+    " .     .     .           .     .     .       .     .     .       . "
+    " . exterior-1 exterior-1 .   central central . opuesto opuesto   . "
+    " . exterior-1 exterior-1 .   central central . opuesto opuesto   . "
+    " .     .     .           .     .     .       .     .     .       . "
+    " reserve reserve reserve reserve reserve reserve reserve reserve reserve reserve";
+}
+#playersList .field {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+#playersList .player[data-position='Colocador']{
+  grid-area: colocador;
+}
+#playersList .player[data-position='Libero']{
+  grid-area: libero;
+}
+#playersList .player[data-position='Exterior']{
+  grid-area: exterior;
+}
+#playersList .player[data-position='Exterior-1']{
+  grid-area: exterior-1;
+}
+#playersList .player[data-position='Central']{
+  grid-area: central;
+}
+#playersList .player[data-position='Opuesto']{
+  grid-area: opuesto;
+}
+#playersList .player[data-position='reserve']{
+  grid-area: reserve;
+}
+#reserves{
+  grid-area: reserve;
+  display: flex;
+  margin: 0 auto;
+}
+#playersList .player{
+  display: inline-block;
+  /* grid-area: reserve; */
+  width: 38px;
+  margin-right: 10px;
+  transition: width .3s ease-in-out;
+}
+#playersList .player:last-of-type {
+  width: 72px;
+}
+#playersList .player:hover{
+  width: 72px;
+}
+
+
+.player-card{
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid var(--blueDark);
+  border-radius: var(--borderRadius);
+  transition: all .6s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+.player-card:hover{
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+img{
+  margin-bottom: 4px;
+}
+.player-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 4px;
+  clip-path: circle(32px at center);
+  background-color: var(--greyLight);
+}
+.player-avatar svg {
+    width: 48px;
+    height: 48px;
+}
+.player-position{
+  text-transform: uppercase;
+  font-size: .65em;
+  margin-bottom: .25em;
+}
+
+
+
+.player-details {
+  background-color: var(--white);
+  display: grid;
+  grid-template-columns: minmax(140px, auto) 20px max-content;
+  grid-template-rows: 24px repeat(2, max-content) max-content;
+  grid-template-areas:    "  .   . close"
+                          "image . details"
+                          "image . details"
+                          "graph graph graph";
+}
+.player-details .player-image {
+  grid-area: image;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto auto;
+  width: 100px;
+  height: 150px;
+}
+.player-details .player-image img,
+.player-details .player-image svg {
+  width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.player-details .details{
+  grid-area: details;
+  padding-right: 20px;
+}
+.player-details .details .player-name{
+  color: var(--blueDark);
+  position: relative;
+  text-align: center;
+  margin-top: 0;
+}
+.player-details .details .player-name::after{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  height: 1px;
+  opacity: .5;
+  background-color: var(--greyDark);
+}
+.player-details .details span{
+  font-weight: 700;
+  margin-left: 1ch;
+  color: var(--blueDark);
+}
+.graph {
+  grid-area: graph;
+}

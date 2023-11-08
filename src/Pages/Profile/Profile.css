@@ -1,0 +1,169 @@
+#profil {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: center;
+}
+#profil .card {
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+@media (min-width: 1024px) {
+  #profil {
+    grid-template-columns: repeat(2, 500px);
+  }
+}
+#paymentsCalendar .yearHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  padding: 8px 0;
+}
+#paymentsCalendar .yearHeader .year { 
+  grid-column: 2;
+  margin: 0; 
+  justify-self: center;
+}
+
+#paymentsCalendar .yearHeader .prev,
+#paymentsCalendar .yearHeader .next,
+#paymentsCalendar .yearHeader .year{
+  justify-self: center;
+}
+#paymentsCalendar .yearHeader .prev,
+#paymentsCalendar .yearHeader .next{
+  font-size: 2em;
+  padding: 0 1em;
+  cursor: pointer;
+}
+#paymentsCalendar .yearHeader .prev { grid-column: 1;}
+#paymentsCalendar .yearHeader .next { grid-column: 3;}
+
+
+
+#paymentsCalendar .balance .amount::before {
+  content: "€";
+  width: 1ch;
+  margin: 0 2px;
+}
+#paymentsCalendar .balance .amount {
+  color: var(--valid);
+}
+#paymentsCalendar .balance .amount.under {
+  color: var(--dangerous);
+}
+#paymentsCalendar .payments {
+  display: grid;
+  grid-template-columns: repeat(2, 150px);
+  grid-column-gap: 4px;
+  grid-row-gap: 4px;
+  margin: 0 auto;
+}
+#paymentsCalendar .payments .month {
+  padding: 8px;
+  border: 1px solid var(--blueMedium);
+  border-radius: 4px;
+  min-width: 140px;
+  background-color: var(--white);
+}
+#paymentsCalendar .payments .month  .name {
+  text-align: center;
+  margin: 0.1em 0 .3em;
+}
+#paymentsCalendar .payments .payment {
+  display: flex;
+  align-items: baseline;
+  /* height: 1.5rem; */
+}
+#paymentsCalendar .payments .payment  p {
+  margin: 0;
+}
+
+#paymentsCalendar .payments .payment::before {
+  content: '\2717';
+  width: 1ch;
+  margin-right: 1ch;
+  color: var(--dangerous);
+}
+#paymentsCalendar .payments .payment.paid::before {
+  content: '\2713';
+  color: var(--valid);
+}
+#paymentsCalendar .payments .payment.paid .type,
+#paymentsCalendar .payments .payment.paid .qty {
+  text-decoration: line-through;
+}
+#paymentsCalendar .payments .payment .qty::before {
+  content: '€';
+  width: 1ch;
+  margin: 0 2px;
+}
+#paymentsCalendar .payments .payment .type,
+#paymentsCalendar .payments .payment  .qty {
+  display: inline-block;
+}
+#paymentsCalendar .payments .payment  .type {
+  margin-right: 1ch;
+}
+#paymentsCalendar .payments .payment.qty::after{
+  content: '€';
+  width: 1ch;
+}
+
+@media (min-width: 600px) {
+  #paymentsCalendar .payments {
+    grid-template-columns: repeat(3, 150px);
+  }
+}
+
+#positionPreference ul > li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+}
+#positionPreference ul > li > label {
+  font-size: large;
+  font-weight: bold;
+}
+
+#positionPreference .radio-group {
+  display: inline-flex;
+  /* background: var(--blueDark); */
+  padding: 2px 4px;
+  border-radius: var(--borderRadius);
+  box-shadow: inset 0 0 0 3px var(--blueLight),
+    0 0 0 3px var(--blueDark);
+  position: relative;
+}
+#positionPreference .radio-group  input {
+  /* display: none; */
+  width: auto;
+  height: 100%;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-right: 2ch;
+  background: var(--blueDark);
+  color: var(--blueLight);
+  border: none;
+  transition: all .6s linear;
+}
+#positionPreference .radio-group  input:last-of-type{
+  margin-right: 0;
+}
+#positionPreference .radio-group  input:checked {
+  background-image: linear-gradient(180deg, var(--pinkLight), var(--pinkDark));
+  color: var(--white);
+}
+#positionPreference .radio-group input:before {
+  content: attr(value);
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}

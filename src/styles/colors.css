@@ -1,0 +1,47 @@
+
+:root{
+  --black: #000000;
+  --white: #ffffff;
+
+  --grey: hsl(0, 0%, 98%);
+  --greySuperLight: hsl(0, 0%, 95%);
+  --greyLight: hsl(0, 0%, 90%);
+  --greyMedium: hsl(0, 0%, 60%);
+  --greyDark: hsl(266, 25%, 40%);
+
+--blueDark: hsl(230, 100%, 40%); /* #4c00ed; */ /* #1236B9 */;
+--blueMedium: hsl(230, 70%, 75%);
+--blueLight: hsl(230, 70%, 90%); /* #8996C9; */
+
+--pinkDark: hsl(306, 82%, 50%);
+--pinkMedium: hsl(306, 77%, 70%) ;
+--pinkLight: hsl(306, 97%, 90%);
+
+--female: #f08ce6;
+--male: #8ccef0;
+
+/* $gold: #ffd930;
+$silver: #808080;
+$bronze: #bf9b7a; */
+
+--dangerous: hsl(0, 84%, 60%);
+--warning: hsl(49, 88%, 60%);
+--valid: hsl(125, 55%, 45%);
+
+--pastMatch-primary: rgb(19, 0, 59);
+--pastMatch-secondary: rgb(85, 22, 202);
+--futureMatch-primary: rgb(76, 0, 237);
+--futureMatch-secondary: rgb(153, 98, 255);
+--friendlyMatch-primary: rgb(2, 99, 70);
+--friendlyMatch-secondary: rgb(39, 211, 159);
+
+--text: var(--greyDark);
+--text-light: var(--white);
+--text-dark: var(--greyDark);
+--text-dark-secondary: var(--greyLight);
+
+--decorative-attencion: var(--warning);
+--decorative-confirmation: var(--friendlyMatch-secondary);
+--decorativa-neutral-dark: var(--greyDark);
+--decorativa-neutral-light: var(--greyLight);
+}

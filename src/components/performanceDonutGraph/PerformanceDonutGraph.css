@@ -1,0 +1,40 @@
+
+.graph {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-color-shade);
+  padding: 8px 4px;
+}
+
+.graph .donut-wrapper,
+.graph .donut-wrapper svg {
+  width: 250px;
+  height: 250px;
+  display: block;
+}
+
+  /* makes it transparent for mouse */
+.graph svg { position: absolute; pointer-events: none; }
+
+.graph svg path,
+.graph svg circle { pointer-events: fill; cursor: pointer; }
+
+.graph svg path.selected,
+.graph svg circle.selected { stroke-width: 30; }
+
+.graph .legend {
+  display: flex;
+  flex-wrap: wrap;
+  text-transform: capitalize;
+  justify-content: center;
+}
+
+.graph .legend .stat { text-align: center; transition: transform .2s ease-in-out; }
+.graph .legend .stat label { padding: 0 6px; }
+.graph .legend .stat label.prev { display: flex; gap: 1ch; }
+.graph .legend .stat p { margin: 0; cursor: pointer; }
+.graph .legend .stat p:nth-child(2n + 1) { background-color: var(--blueLight); }
+.graph .legend .stat p.prev { font-weight: 300; font-size: 0.7em; }
+.graph .legend .stat p.selected { font-weight: 900; }

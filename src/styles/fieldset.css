@@ -1,0 +1,41 @@
+
+fieldset {
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--borderRadius);
+  margin: 2px;
+}
+fieldset.dashed {
+  border: 1px dashed var(--blueDark);
+}
+fieldset.fit {
+  width: fit-content;
+}
+fieldset legend {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  margin: 0 8px;
+}
+fieldset legend .btn {
+  margin-left: 1ch;
+  font-size: .8rem;
+}
+fieldset legend.small {
+  text-transform: none;
+  font-size: small;
+}
+fieldset legend.color {
+  color: var(--blueMedium);
+}
+
+/* fieldset {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px dashed var(--blueDark);
+  padding: 1rem;
+  column-gap: 1ch;
+} */

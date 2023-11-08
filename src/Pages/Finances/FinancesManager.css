@@ -1,0 +1,80 @@
+#financesManager .table-row,
+#financesManager .table-head {
+  /* // max 375px 220 = 150 / 2 = 75 */
+  grid-template-columns: 60px 30px minmax(60px, 1fr) 60px 1fr 80px;
+}
+#sponsorsManager .table-row,
+#sponsorsManager .table-head {
+  /* // max 375px 220 = 150 / 2 = 75 */
+  grid-template-columns: 60px 1fr 12ch 12ch 1fr 4ch 40px;
+}
+#downloadPeriod,
+#automaticActions,
+#manualMembershipFee {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  
+}
+#multiplePanels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+#paymentsDetails {
+  width: fit-content;
+}
+#paymentsDetails .month{
+  border: 1px dashed var(--blueMedium);
+  border-radius: var(--border-radius);
+  padding: 4px;
+  margin: 8px 0;
+}
+#paymentsDetails .month .date {
+  margin-right: 8px;
+}
+#paymentsDetails .month .title {
+  display: flex;
+  justify-content: space-between;
+}
+#paymentsDetails .payments {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#paymentsDetails .payment{
+  display: grid;
+  grid-template-columns: auto 1fr 60px 1fr auto;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+#paymentsDetails .payment > * {
+  margin: 0 auto;
+}
+#paymentsDetails .payment .qty {
+  width: 6ch;
+}
+#paymentsDetails .payment .qty::before {
+  content: '€';
+  width: 1ch;
+  margin-right: 2px;
+}
+.monthPicker {
+  width: 10ch;
+}
+
+
+@media screen and (max-width: 992px) {
+
+  #sponsorsManager .table-row,
+  #sponsorsManager .table-head {
+    /* // max 375px 220 = 150 / 2 = 75 */
+    grid-template-columns: 60px 1fr 4ch 6ch 5ch 40px;
+  }
+  #sponsorsManager .link {
+    display: none;
+  }
+}

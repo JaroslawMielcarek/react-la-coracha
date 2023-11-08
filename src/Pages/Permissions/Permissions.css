@@ -1,0 +1,52 @@
+#permissionsManager .table-row,
+#permissionsManager .table-head {
+  /* // max 375px 220 = 150 / 2 = 75 */
+  grid-template-columns: 60px 8ch minmax(60px, 1fr) 60px 1fr 120px;
+}
+#memberIDManager fieldset {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  padding: 4px;
+  border: 1px dashed var(--blueDark);
+}
+#memberIDManager fieldset input {
+  width: 8ch;
+}
+#memberIDManager .idsList {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#memberIDManager .idsList .btn,
+#memberIDManager .legend::before{
+  border: 1px solid var(--greyLight);
+  border-radius: var(--borderRadius);
+  background-color: var(--white);
+}
+#memberIDManager .btn.blocked,
+#memberIDManager .legend.blocked::before {
+  background: var(--greyLight);
+}
+#memberIDManager .btn.assigned,
+#memberIDManager .legend.assigned::before {
+  border: 1px solid var(--dangerous)
+  /* background: var(--pastMatch-primary); */
+}
+
+
+@media screen and (max-width: 992px) {
+  #permissionsManager .table-row,
+  #permissionsManager .table-head {
+    /* // max 375px 220 = 150 / 2 = 75 */
+    grid-template-columns: 60px 8ch 1fr 1fr ;
+  }
+  #permissionsManager .gender,
+  #permissionsManager .team {
+    display: none;
+  }
+
+}

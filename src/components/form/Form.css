@@ -1,0 +1,67 @@
+form {
+  width: max-content;
+  padding: 8px;
+}
+
+form .buttons {
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+}
+.form-group .option {
+  flex-shrink: 0;
+}
+
+.form-group .options {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  column-gap: 4px;
+}
+.form-group>label {
+  font-size: .825em;
+  display: block;
+  font-style: italic;
+  color: var(--blueMedium);
+  margin-bottom: 4px;
+}
+
+.form-group,
+.form-inline-element .tickButton  {
+  margin-bottom: 8px;
+}
+
+.form-inline-elements .tickButton {
+  margin-left: 2ch;
+}
+/* .form-group label { margin-right: 1ch; } */
+.form-group input {
+  border: 1px solid var(--greySuperLight)
+}
+.form-group.has-error input,
+fieldset.has-error {
+  border: 1px solid var(--dangerous)
+}
+.form-group.has-error .error { color: var(--dangerous) }
+/* .form-group.has-error .error::before {
+  content: '-';
+  width: 1ch;
+  margin: 0 2px;
+} */
+
+.form-inline-elements {
+  display: flex;
+  align-items: flex-end;
+}
+
+.signup-form,
+.login-form,
+.forgot-form,
+.reset-form {
+  max-width: clamp(240px, 260px, 280px);
+  border: 1px solid rgba(76,0,237,.2);
+  border-radius: var(--borderRadius);
+  background-color: var(--white);
+}
+

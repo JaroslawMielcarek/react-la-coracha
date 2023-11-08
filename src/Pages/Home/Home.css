@@ -1,0 +1,158 @@
+.join_link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.join_link .join_icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 1ch;
+  overflow: visible;
+}
+.join_link .join_icon *{
+  stroke: white; /* eliminate to make animation work */
+  stroke-width: 2;
+}
+.join_link:hover .join_icon path.plus {
+  animation: pulse 0.8s infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: none;
+    stroke: white;
+  }
+  50% {
+    transform: translate(0, -0.45em) scale(1.3);
+    stroke: rgb(236, 154, 154);
+  }
+  100% {
+    transform: none;
+    stroke: white;
+  }
+}
+.join_link:active .join_icon path.plus {
+  animation: none;
+}
+
+#hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #372b47;
+  height: 70vh;
+}
+
+.hero__header {
+  text-align: center;
+  font-weight: 900;
+  line-height: 0.95em;
+  max-width: 12ch;
+  margin-top: 0;
+  margin-bottom: 0.25em;
+}
+
+.hero__description {
+  color: #898989;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  max-width: 22ch;
+  text-align: center;
+}
+
+.logo {
+  opacity: 0.2;
+  position: absolute;
+  z-index: -1;
+  width: 90vw;
+  height: auto;
+}
+
+#sponsorsDisplay,
+#sponsorsDisplay #subSponsors,
+#sponsorsDisplay .sponsor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#sponsorsDisplay #subSponsors {
+  flex-direction: row;
+}
+#sponsorsDisplay .sponsor {
+  width: 126px;
+  height: 68px;
+}
+#sponsorsDisplay .sponsor.main {
+  width: 378px;
+  height: 252px;
+}
+#sponsorsDisplay .sponsor img {
+  /* max-height: 100%; */
+  height: 80%;
+  max-width: 100%;
+  /* aspect-ratio: 2/3; */
+  object-fit: contain;
+  transition: transform .5s, filter 1s ease-in-out;
+  filter: grayscale(100%);
+}
+#sponsorsDisplay .sponsor:hover img {
+  filter: grayscale(0);
+  transform: scale(1.1);
+}
+#sponsorsDisplay .sponsor:hover .link {
+  opacity: 0;
+}
+#sponsorsDisplay .sponsor .link {
+  margin: 0;
+  padding: .5rem;
+  text-decoration: none;
+  font-weight: 700;
+  text-align: center;
+  transition: .5s ease;
+  opacity: 1;
+}
+
+#footer {
+  display: flex;
+  justify-content: center;
+  margin: 32px auto 16px;
+  padding: 8px 0;
+  border-top: 1px solid var(--greyLight);
+}
+#footer > div {
+  padding: 0 8px;
+  border-right: 1px solid var(--greyMedium);
+}
+#footer > div:last-of-type {
+  border-right: none;
+}
+
+@media only screen and (orientation: landscape) {
+  #hero {
+    height: 100vh;
+  }
+  .logo {
+    width: 60vw;
+  }
+}
+@media only screen and (min-width: 1070px) {
+  #header.underlay {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+  }
+  .logo {
+    opacity: 0.1;
+    width: 80vh;
+  }
+  #hero {
+    height: 100vh;
+  }
+}

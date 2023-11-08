@@ -1,0 +1,36 @@
+section {
+  margin: 0 auto;
+  max-width: 100%;
+  /* min-height: 100vh; */
+}
+section > .extra-message {
+  margin-bottom: 16px;
+}
+
+.sectionHeader {
+  margin: 1.75em auto 1.25em;
+  text-align: center;
+}
+
+.sectionBody {
+  padding: 12px 18px;
+}
+section.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+}
+@media screen and (min-width: 740px) {
+  section {
+    padding: 0 3%;
+  }
+  .sectionBody {
+    padding: 0;
+  }
+}
+@media screen and (min-width: 1070px) {
+  section {
+    max-width: 1200px;
+  }
+}/*# sourceMappingURL=section.css.map */

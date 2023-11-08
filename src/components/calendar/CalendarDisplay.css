@@ -1,0 +1,209 @@
+#calendar .table {
+  max-height: calc( 4 * 80px );
+  overflow-y: scroll;
+}
+
+#calendar .legend::before {
+  background: var(--futureMatch-primary);
+  background: -moz-linear-gradient(
+    180deg,
+    var(--futureMatch-primary) 0%,
+    var(--futureMatch-secondary) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    var(--futureMatch-primary) 0%,
+    var(--futureMatch-secondary) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    var(--futureMatch-primary) 0%,
+    var(--futureMatch-secondary) 100%
+  );
+}
+#calendar .legend.friendly::before {
+  background: var(--pastMatch-primary);
+  background: -moz-linear-gradient(
+    180deg,
+    var(--friendlyMatch-primary) 0%,
+    var(--friendlyMatch-secondary) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    var(--friendlyMatch-primary) 0%,
+    var(--friendlyMatch-secondary) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    var(--friendlyMatch-primary) 0%,
+    var(--friendlyMatch-secondary) 100%
+  );
+}
+#calendar .legend.disputed::before {
+  background: var(--pastMatch-primary);
+  background: -moz-linear-gradient(
+    180deg,
+    var(--pastMatch-primary) 0%,
+    var(--pastMatch-secondary) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    var(--pastMatch-primary) 0%,
+    var(--pastMatch-secondary) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    var(--pastMatch-primary) 0%,
+    var(--pastMatch-secondary) 100%
+  );
+}
+
+
+@media only screen and (min-width: 740px){
+  .list {
+    max-height: calc(4 * 75px);
+  }
+  .list .large {
+    max-height: calc(5 * 75px);
+  }
+}
+
+
+.match {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+  padding-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.match::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 72px;
+  bottom: 0;
+  z-index: -1;
+  background: var(--futureMatch-primary);
+  background: -moz-linear-gradient( 180deg, var(--futureMatch-primary ) 0%, var( --futureMatch-secondary ) 100% );
+  background: -webkit-linear-gradient( 180deg, var( --futureMatch-primary ) 0%, var( --futureMatch-secondary ) 100% );
+  background: linear-gradient( 180deg, var( --futureMatch-primary ) 0%, var( --futureMatch-secondary ) 100% );
+  /* //Correct this microsoft colors- are wrong */
+  /* filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4c00ed",endColorstr="#7d36ff",GradientType=1); */
+}
+
+.match.friendly::after{
+  background: var( --pastMatch-primary);
+  background: -moz-linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
+  background: -webkit-linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
+  background: linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
+}
+.match.past {
+  filter: grayscale(.6);
+}
+
+.team,
+.match-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.team {
+  min-width: 110px;
+  user-select: none;
+  filter: drop-shadow(0 0 20px var( --greyDark ));
+}
+.team .club-logo {
+  width: 64px;
+  height: 64px;
+  padding: 8px;
+  clip-path: circle(32px at center);
+  margin-bottom: 8px;
+  background-color: var( --white );
+  content: contain;
+}
+/* .team .club-logo {
+
+} */
+.team .club-name,
+.team .team-name,
+.team .result-sets {
+  color: var( --text-light );
+}
+.team .club-name {
+  text-transform: capitalize;
+  /* // font-size: 1.1rem; */
+  margin-top: 0;
+  margin-bottom: .025em;
+  max-width: 12ch;
+}
+.team .team-name {
+  text-transform: uppercase;
+  font-weight: 200;
+}
+.team .result-sets {
+  font-size: 1.75rem;
+  font-weight: 300;
+  margin-top: .25em;
+}
+
+.match-info {
+  font-family: 'Lato', sans-serif;
+  margin: 0 5vw;
+}
+.match-info .league{
+  min-height: 1.4rem;
+}
+.match-info .type{
+  color: var( --text );
+}
+.match-info .versus,
+.match-info .date,
+.match-info .time,
+.match-info .location,
+.match-info .hour,
+.match-info .friendly {
+  color: var( --text-light );
+}
+.match-info .versus{
+  font-size: 3rem;
+  line-height: 3rem;
+  text-shadow: 0 0 2px var( --text );
+}
+.match-info .location{
+  font-weight: 200;
+}
+
+@media only screen and (min-width: 1070px){
+  .match::after {
+    top: 88px;
+  }
+  .match-info {
+    margin-top: 12px;
+  }
+  .match-info .versus {
+    font-size: 3.4rem;
+  }
+  .team .club-logo {
+    width: 92px;
+    height: 92px;
+    clip-path: circle(46px at center);
+  }
+}
+@media only screen and (min-width: 1400px){
+  .match::after {
+    top: 104px; 
+  }
+  .match-info {
+    margin-top: 32px;
+  }
+  .team .club-logo{
+    width: 128px;
+    height: 128px;
+    clip-path: circle(64px at center);
+  }
+}

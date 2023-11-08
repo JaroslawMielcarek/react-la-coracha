@@ -1,0 +1,40 @@
+.grid {
+  margin-top: 24px;
+}
+.filter-panel{
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+}
+.table-head {
+  border-bottom: 1px solid var(--blueDark);
+}
+.table-head .column.sort {
+  cursor: pointer;
+}
+.table-head .column.sort:hover {
+  background-color: var(--blueLight);
+}
+.table-body {
+  max-height: calc(10 * 30px);
+  overflow-y: scroll;
+}
+.table-row,
+.table-head {
+  display: grid;
+  width: 100%;
+  column-gap: 4px;
+  row-gap: 0;
+  text-align: center;
+  padding: 10px 4px;
+}
+.table-row:nth-of-type(2n){
+  background-color: var(--blueLight);
+}
+
+.table-row .column,
+.table-head .column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

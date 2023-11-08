@@ -1,0 +1,31 @@
+
+#matchManagement .table-row,
+#matchManagement .table-head {
+  /* // max 400px - 110 + 2fr */
+  grid-template-columns: 60px repeat(2, minmax(60px, 1fr)) minmax(40px, 1fr) minmax(80px, .5fr) minmax(40px, .5fr) 50px;
+  }
+
+#matchManagement .blocks {
+  flex-direction: column;
+}
+#matchManagement .blocks .team,
+#matchManagement .blocks .time,
+#matchManagement .type {
+  font-weight: 300;
+}
+#matchManagement .blocks .gender {
+  color: var(--blueMedium)
+}
+
+
+@media (max-width: 992px) {
+
+  #matchManagement .table-row,
+  #matchManagement .table-head {
+    /* // max 400px - 60 + 120 + 40 + 80 + 40 + 50 */
+    grid-template-columns: 40px repeat(2, minmax(60px, 1fr)) minmax(40px, 1fr) minmax(50px, .5fr) 30px;
+  }
+  #matchManagement .location {
+    display: none;
+  }
+}

@@ -1,0 +1,18 @@
+#join-form {
+  width: clamp(340px , 460px, 800px);
+}
+.category {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.category.female .option.active,
+.category.male .option.active {
+  color: var(--white)
+}
+.category.female .option.active {
+  background-color: var(--female)
+}
+.category.male .option.active {
+  background-color: var(--male)
+}

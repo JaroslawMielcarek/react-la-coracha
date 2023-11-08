@@ -1,0 +1,96 @@
+#teamsList {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -200%;
+  height: auto;
+  transition: all .5s ease-in-out;
+  z-index: -1;
+}
+#teamsList.open{
+  bottom: 44px;
+}
+.teamsList__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--grey);
+  position: relative;
+  transition: height .5s ease-in-out;
+  height: 40px;
+  overflow: hidden;
+  color: inherit;
+}
+.teamsList__item:visited{ color: inherit; }
+.teamsList__item.first { box-shadow: 0 0 4px var(--blueDark); }
+.teamsList__item.first .header { 
+  font-size: 1.6em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.teamsList__item.no-teams {
+  color: var(--grey);
+  background-color: var(--blueDark);
+}
+.teamsList__item:nth-child(2n){ background-color: var(--blueDark); }
+.teamsList__item:nth-child(2n) .team__name,
+.teamsList__item:nth-child(2n) .team__league{ color: var(--white); }
+.team__logo { 
+    width: auto;
+    height: 100%;
+    max-height: 64px;
+    clip-path: circle(50% at center);
+    margin: 4px 16px 4px 0;
+ }
+ /* .team__details {
+  min-height: 20px;
+  max-height: 62%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+ } */
+.team__name { 
+  margin: 0;
+}
+.team__gender,
+.team__league {
+  margin: 0;
+}
+.team__league {
+  margin-left: 1.3em;
+}
+.team__gender { 
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--black);
+}
+.team__gender::before{
+    content: '';
+    display: inline-block;
+    width: .8em;
+    height: .8em;
+    border-radius: 50%;
+    background: var(--black);
+    background: linear-gradient(90deg, var(--female) 0%, var(--male) 100%);
+    margin-right: .5em;
+    position: relative;
+    top: .125em;
+  }
+.team__gender.feminino{ color: var(--female);}
+.team__gender.feminino::before{ background: var(--female); }
+.team__gender.masculino{ color: var(--male); }
+.team__gender.masculino::before{ background: var(--male); }
+
+@media only screen and (min-device-height: 600px){
+}
+@media only screen and (min-height: 992px){
+
+  .team__logo{ max-height: 128px; }
+  .teamsList__item{ height: 150px; }
+  .teamsList__item .team__logo{
+      width: 128px;
+      height: 128px;
+      clip-path: circle(64px at center);
+  }
+}

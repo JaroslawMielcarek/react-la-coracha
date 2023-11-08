@@ -1,0 +1,16 @@
+
+
+#teamsManagement .table-row,
+#teamsManagement .table-head{
+  grid-template-columns: 60px repeat(2, 1fr) 60px 40px 40px 50px;
+}
+
+#teamsManagement .column.name {
+  overflow: hidden;
+  justify-content: flex-start;
+}
+#teamDetails .playerList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

@@ -1,0 +1,16 @@
+
+#courtList,
+#clubList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#courtList .element,
+#clubList .element{
+  padding: 8px;
+}
+
+
+#courtList .element .address {
+  font-size: 0.8em;
+}

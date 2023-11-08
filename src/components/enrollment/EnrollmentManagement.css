@@ -1,0 +1,87 @@
+#newCategory {
+  margin-bottom: 32px;
+}
+#enrollmentManagement > * {
+  margin-bottom: 16px;
+}
+#enrollmentManagement .category-name {
+  font-size: 1.4rem;
+}
+
+#enrollmentManagement #details {
+  background-color: var(--blueLight);
+}
+#enrollmentManagement #details .female,
+#enrollmentManagement #details .male {
+  width: min-content;
+}
+.gender {
+  text-transform: capitalize;
+}
+
+.danger {
+  font-size: .7rem;
+}
+
+textarea {
+  resize: none;
+}
+
+#enrollmentManagement .table:nth-of-type(2) {
+  border-top: 4px double var(--blueDark);
+}
+#enrollmentManagement .table-row,
+#enrollmentManagement .table-head {
+  grid-template-columns: 70px 1fr 1fr 60px 12ch 80px 1fr 12ch 6ch 60px;
+}
+
+#enrollmentManagement .table .waitingList {
+  border-top: 2px dashed var(--blueDark);
+}
+
+.table-row:nth-of-type(1n).new {
+  /* border: 4px double var(--valid) */
+  background-color: var(--greyLight);
+}
+.column.comments,
+.column.contactedBy {
+  display: flex;
+}
+
+.grid:first-of-type {
+  margin-top: 0;
+}
+
+.gender-type {
+  flex-direction: column;
+  text-transform: capitalize;
+}
+.gender-type .current {
+  font-size: .9rem;
+}
+.gender-type .current.closeToLimit b {
+  color: var(--dangerous)
+}
+
+@media screen and (max-width: 992px) {
+
+  #enrollmentManagement .table-row,
+  #enrollmentManagement .table-head {
+    grid-template-columns: 40px 1fr 32px 80px 32px 40px 40px;
+  }
+  #enrollmentManagement .table-head .column {
+    font-size: smaller;
+  }
+
+  .column.comments,
+  .column.contactedBy,
+  .column.location {
+    display: none;
+  }
+  .column.action .btn {
+    font-size: smaller;
+  }
+}
+
+
+

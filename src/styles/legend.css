@@ -1,0 +1,16 @@
+.legendContainer {
+  display: flex;
+  column-gap: 24px;
+  padding: 16px 4px;
+}
+.legend {
+  display: flex;
+  align-items: center;
+}
+#calendar .legend::before,
+#memberIDManager .legend::before {
+  content:'';
+  width: 1em;
+  height: 1em;
+  margin-right: 1ch;
+}

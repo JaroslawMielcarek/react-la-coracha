@@ -1,0 +1,86 @@
+#practiceManagement .table-row,
+#practiceManagement .table-head{
+  grid-template-columns: 60px repeat(5, 1fr) 60px;
+}
+
+
+.prefList,
+.practice-stats,
+.playerList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 2px 2px 0;
+  gap: 2px;
+}
+.prefList > span::after {
+  content: ">";
+  margin-left: 2px;
+  color: var(--blueMedium);
+}
+.prefList > span:last-of-type::after { display: none;}
+
+.practice-stats {
+  justify-content: space-evenly;
+  align-items: flex-end;
+  background-color: var(--blueLight);
+  border-radius: var(--borderRadius);
+}
+
+.position-bar {
+  display: block;
+  background-color: var(--blueMedium);
+}
+
+
+.playerButton {
+  min-width: 110px;
+}
+
+.playerButton * {
+  font-size: smaller;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.playerButton.checked {
+  background-color: var(--blueMedium);
+  transform: scale(0.9);
+  color: var(--white);
+}
+.playerButton.checked .practice-stats {
+  color: var(--blueMedium);
+}
+
+.playerButton.checked .extra-message,
+.playerButton.checked .extra-message::after {
+  color: var(--greyLight)
+}
+.playerButton.single-strike,
+.playerButton.double-strike,
+.playerButton.tripple-strike {
+  border-right: 2px solid var(--dangerous);
+}
+.playerButton.double-strike,
+.playerButton.tripple-strike {
+  border-bottom: 2px solid var(--dangerous);
+}
+.playerButton.tripple-strike {
+  border-left: 2px solid var(--dangerous);
+  pointer-events: none;
+  opacity: .4;
+}
+
+
+@media screen and (max-width: 992px) {
+  #practiceManagement .table-row,
+  #practiceManagement .table-head{
+    grid-template-columns: 60px 50px 50px 1fr 40px 40px;
+  }
+
+  #practiceManagement .table .column.dayName {
+    display: none;
+  }
+}

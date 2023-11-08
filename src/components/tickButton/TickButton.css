@@ -1,0 +1,150 @@
+.tickButton {
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  /* padding: 4px 0; */
+  /* gap: 1ch; */
+  /* margin-right: 1ch; */
+  /* transform: scale( .5 ); // lazy way to make it smaller */
+  /* transform-origin: 50% 50%; */
+  /* transform-style: preserve-3d; */
+  /* transition: transform .14s ease; */
+}
+.tickButton label {
+  margin-right: 1ch;
+}
+/* .tickButton:active {
+  transform: rotateX(30deg);
+} */
+.tickButton div {
+  border: 1px solid var(--dangerous);
+  border-radius: 50%;
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.tickButton div svg {
+  fill: none;
+  stroke-width: 3px;
+  stroke: var(--dangerous);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  width: 22px;
+  height: 22px;
+  display: block;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  z-index: 1;
+  stroke-dashoffset: calc(162.6 - 38);
+  stroke-dasharray: 0 162.6 133 calc(162.6 - 133);
+  transition: all .4s ease 0s;
+}
+.tickButton div:before,
+.tickButton div:after {
+  content: '';
+  width: 1px;
+  height: 11px;
+  background: var(--dangerous);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 5px;
+}
+.tickButton div:before {
+  opacity: 0;
+  transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+  animation: bounceInBefore .3s linear forwards .3s;
+}
+.tickButton div:after {
+  opacity: 0;
+  transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+  animation: bounceInAfter .3s linear forwards .3s;
+}
+.tickButton.checked div {
+  border: 1px solid var(--valid);
+}
+.tickButton.checked div svg {
+  stroke: var(--valid);
+  stroke-dashoffset: 162.6;
+  stroke-dasharray: 0 162.6 28 calc(162.6 - 28);
+  transition: all .4s ease .2s;
+}
+.tickButton.checked div:before,
+.tickButton.checked div:after {
+  background: var(--valid);
+}
+
+.tickButton.checked div:before {
+  opacity: 0;
+  transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+  animation: bounceInBeforeDont .3s linear forwards 0s;
+}
+.tickButton.checked div:after {
+  opacity: 0;
+  transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+  animation: bounceInAfterDont .3s linear forwards 0s;
+}
+
+@keyframes bounceInBefore {
+  0% {
+      opacity: 0;
+      transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+  }
+  50%{
+      opacity: 0.9;
+      transform: scale(1.1) translate(-50%, -50%) rotate(45deg);
+  }
+  80%{
+      opacity: 1;
+      transform: scale(.89) translate(-50%, -50%) rotate(45deg);
+  }
+  100%{
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+@keyframes bounceInAfter {
+  0% {
+      opacity: 0;
+      transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+  }
+  50%{
+      opacity: 0.9;
+      transform: scale(1.1) translate(-50%, -50%) rotate(-45deg);
+  }
+  80%{
+      opacity: 1;
+      transform: scale(.89) translate(-50%, -50%) rotate(-45deg);
+  }
+  100%{
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%) rotate(-45deg);
+  }
+}
+
+@keyframes bounceInBeforeDont {
+  0% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%) rotate(45deg);
+  }
+  100%{
+      opacity: 0;
+      transform: scale(.3) translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+@keyframes bounceInAfterDont {
+  0% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%) rotate(-45deg);
+  }
+  100%{
+      opacity: 0;
+      transform: scale(.3) translate(-50%, -50%) rotate(-45deg);
+  }
+}

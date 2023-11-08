@@ -1,0 +1,23 @@
+.tabs-header{
+  display: flex;
+  border-bottom: 1px solid var(--blueDark);
+  margin: 14px 0;
+}
+.tab-title{
+  padding: 4px 8px;
+  cursor: pointer;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.tab-title.active {
+  background-color: var(--blueDark);
+  color: var(--white);
+}
+
+
+@media screen and (max-height: 992px) {
+  .tabs-header .tab-title {
+    font-size: small;
+    padding: 4px 4px;
+  }
+}

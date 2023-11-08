@@ -1,0 +1,43 @@
+.category-name,
+.category-gender {
+  text-transform: capitalize;
+}
+
+.category-gender {
+  filter: drop-shadow(0 1px 1px var(--greyLight));
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+.category-gender.Feminino {
+  color: var(--female);
+}
+.category-gender.Masculino {
+  color: var(--male);
+}
+
+.progress-bar {
+  border-radius: 2px;
+  height: 4px;
+  width: 100%;
+
+  -webkit-box-shadow: 0 4px 6px -1px var(--greyLight);
+  -moz-box-shadow: 0 4px 6px -1px var(--greyLight);
+  box-shadow: 0 4px 6px -1px var(--greyLight);
+
+  background-color: var(--white);
+  
+}
+/* For Chrome or Safari */
+.progress-bar::-webkit-progress-bar {
+  background-color: var(--white);
+}
+/* For Chrome or Safari and Firefox */
+
+.progress-bar.Feminino::-webkit-progress-value {
+  background-color: var(--female);
+}
+
+/* For Chrome or Safari and Firefox */
+.progress-bar.Masculino::-webkit-progress-value {
+  background-color: var(--male);
+}

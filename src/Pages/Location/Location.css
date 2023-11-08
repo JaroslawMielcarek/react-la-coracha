@@ -1,0 +1,91 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-wrapper {
+  border: 1px solid var(--blueLight);
+  border-radius: var(--borderRadius);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  width: 210px;
+  height: 80px;
+}
+.location-wrapper .location {
+    padding: 0 1em;
+    max-width: 70%;
+}
+.location-wrapper .name {
+    font-weight: 900;
+    line-height: 1.2em;
+    margin: 0.6em 0;
+  }
+
+.location-wrapper .address {
+  line-height: 1em;
+}
+.location-wrapper .car {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: var(--blueDark);
+    transition: all .6s ease-in-out;
+    border-top-right-radius: var(--borderRadius);
+    border-bottom-right-radius: var(--borderRadius);
+}
+.location-wrapper .car:hover { opacity: 0.7; }
+.location-wrapper .car:hover svg { transform: scale(0.9); 
+  transition: all .6s ease-in-out; }
+.location-wrapper .car svg {
+      width: 24px;
+      height: auto;
+      filter: invert(100%) sepia(100%) saturate(2%) hue-rotate(200deg) brightness(109%) contrast(101%);
+    }
+
+#map {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--borderRadius);
+  background-color: var(--white);
+  margin: 0 8px;
+  box-shadow: 0 2px 30px var(--blueLight), 0 2px 6px var(--blueDark);
+}
+#map svg {
+  width: 100%;
+  height: 100%;
+}
+#map svg #Pabellons g {
+  cursor: pointer;
+}
+
+#map #AveMaria path,
+.location-wrapper #AveMaria.car {
+  fill: var(--pinkMedium);
+  background-color: var(--pinkMedium);
+}
+#map #TorreAtalaya path,
+.location-wrapper #TorreAtalaya.car {
+  fill: var(--pinkDark);
+  background-color: var(--pinkDark);
+}
+#map #Campanillas path,
+.location-wrapper #Campanillas.car {
+  fill: var(--blueDark);
+  background-color: var(--blueDark);
+}
+#map #DivinoPastor path,
+.location-wrapper #DivinoPastor.car {
+  fill: var(--blueMedium);
+  background-color: var(--blueMedium);
+}
+
+
+@media (max-width: 992px) {
+}
