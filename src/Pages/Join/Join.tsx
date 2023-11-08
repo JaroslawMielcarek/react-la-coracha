@@ -6,7 +6,7 @@ import { FormContext, useFormState } from "components/form/useFormState"
 import { SelectInputForm } from "components/selectInput/SelectInput"
 import { ToggleButtonForm } from "components/toggleButton/ToggleButton"
 import { useFetch } from "utils/useFetch"
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import { TEnrollCategory } from "shared/types"
 import { UserContext } from "utils/useUser"
 

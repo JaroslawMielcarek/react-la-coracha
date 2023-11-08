@@ -46,7 +46,7 @@ export function useFetch<T>({url, initialPayload, options, errorTitle}: TUseFetc
 
   useEffect(() => {
     console.log(url, {fetchState})
-  },[fetchState])
+  },[fetchState, url])
 
   useEffect(() => {
     if (fetchState.error) {
@@ -91,7 +91,7 @@ export function useFetch<T>({url, initialPayload, options, errorTitle}: TUseFetc
 
   useEffect(() => {
     fetchData(url, initialPayload)
-  },[url, fetchData])
+  },[url, fetchData, initialPayload])
 
   const sendData = (sendDataUrl: string, payload: any, headers?: { [key: string]: string }) => {
     return axios.post(API_URL + sendDataUrl, payload, { headers: headers || authHeader(), timeout: 5000 })

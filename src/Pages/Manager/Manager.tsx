@@ -15,7 +15,7 @@ export const Manager = () => {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged])
+  },[isLogged, navigate])
 
   return (
     <section>

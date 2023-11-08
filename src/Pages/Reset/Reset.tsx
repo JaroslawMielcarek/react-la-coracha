@@ -13,7 +13,7 @@ export default function Reset () {
   const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState({})
   const [userData, sendData] = useFetch({url: "", errorTitle: "Reset"})
   const [ loading, setLoading ] = useState(false)
-  const [ searchParams, setSearchParams ] = useSearchParams()
+  const [ searchParams ] = useSearchParams()
 
   const handleSubmit = async () => {
     const token = searchParams.toString().split("=")[1]

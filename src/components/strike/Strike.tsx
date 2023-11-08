@@ -75,7 +75,7 @@ export const StrikeWithForm = (props: TStrikeWithFormProps) => {
 
   useEffect(() => {
     if (props.validators) registerInput(props.name, props.validators)
-  },[])
+  },[props.validators, props.name, registerInput])
 
   const handleChange = (val: TStrike) => {
     if (props.onClick) return props.onClick(props.name, val)

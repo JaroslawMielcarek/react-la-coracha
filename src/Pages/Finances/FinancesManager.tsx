@@ -23,7 +23,7 @@ export const FinanceManager = () => {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged])
+  },[isLogged, navigate])
 
   return (
     <section>
@@ -184,7 +184,7 @@ const PlayersPayments = () => {
       default:
         return setList(players)
     }
-  },[selectedFilter, players])
+  },[selectedFilter, players, selectedPlayer])
 
   const handleEdit = (player: TPlayer) => setSelectedPlayer(player)
   
@@ -379,11 +379,11 @@ const AutomaticActions = () => {
 }
 
 const AddMembershipFeeToTeamMembers = () => {
-  const [ monthly, setFee] = useFetch({ url:"", errorTitle: "Monthly Payments" })
+  const [ monthly, sendData] = useFetch({ url:"", errorTitle: "Monthly Payments" })
   const [ membershipFee, setMembershipFee ] = useState(30)
   
   const handleAddMensualidadToTeamMembers = () => {
-    if (membershipFee) setFee("admin/addMensualidadToPlayersWithTeam", {membershipFee: membershipFee})
+    if (membershipFee) sendData("admin/addMensualidadToPlayersWithTeam", {membershipFee: membershipFee})
   }
 
   return (

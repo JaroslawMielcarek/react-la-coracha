@@ -26,7 +26,7 @@ export default function withForm(InputComponent: any) {
 
     useEffect(() => {
       registerInput(props.name, props.validators)
-    }, [])
+    }, [props.name, props.validators, registerInput])
 
     function onChange <T>(val: T) {
       if (props.onChange) return props.onChange(props.name, val)

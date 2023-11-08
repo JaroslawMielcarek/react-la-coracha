@@ -15,7 +15,7 @@ export const Practices = () => {
   
   useEffect(() => {
     if (!isLogged()) return navigate("/login")
-  },[isLogged])
+  },[isLogged, navigate])
 
   return (
     <section >

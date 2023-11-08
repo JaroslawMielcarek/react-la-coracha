@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-const API_URL = 'http://172.20.10.8:8080/api/' //'http://192.168.1.59:8080/api/' //`https://lacoracha-backend.azurewebsites.net/api/`
+const API_URL = 'http://192.168.1.59:8080/api/' //`https://lacoracha-backend.azurewebsites.net/api/`
 
 export default function axio (url: string, data: any, headers = undefined) {
   return axios

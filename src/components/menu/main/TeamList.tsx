@@ -27,7 +27,7 @@ export default function TeamList ({teams, handleSelectedTeam}: {teams: TTeam[], 
       setSelected(null)
       clearTimeout(t)
     }, 4000)
-  },[selected])
+  },[selected, handleSelectedTeam])
 
   function header () {
     return (
