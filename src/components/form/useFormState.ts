@@ -3,7 +3,7 @@ import { isEmpty } from "utils/object"
 
 type imageType = { data: string, contentType: string }
 
-type formDataType = { [key: string]: string | number | boolean | File | imageType | object |null  }
+type formDataType = { [key: string]: string | number | boolean | File | imageType | object | [] | null  }
 
 type stateType = {
   data: formDataType,
@@ -59,7 +59,7 @@ export const useFormState = (initialValues: formDataType) => {
 
     return false
   }
-  const validateField = <T>(name: string, value: T, compare?: {to: string, errMsg: string}) => {
+  const validateField = <T>(name: string, value?: T, compare?: {to: string, errMsg: string}) => {
     const { validators } = formState
     if (isEmpty(validators) || typeof validators[name] === 'undefined' || !validators[name].length ) return true
 
