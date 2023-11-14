@@ -8,6 +8,9 @@ fieldset {
 fieldset.dashed {
   border: 1px dashed var(--blueDark);
 }
+fieldset.solid {
+  border: 1px solid var(--blueDark);
+}
 fieldset.fit {
   width: fit-content;
 }

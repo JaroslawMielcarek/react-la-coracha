@@ -1,4 +1,4 @@
-.join_link {
+#hero .join_link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -6,18 +6,18 @@
   width: fit-content;
 }
 
-.join_link .join_icon {
+#hero .join_link .join_icon {
   display: inline-block;
   width: 1em;
   height: 1em;
   margin-right: 1ch;
   overflow: visible;
 }
-.join_link .join_icon *{
+#hero .join_link .join_icon *{
   stroke: white; /* eliminate to make animation work */
   stroke-width: 2;
 }
-.join_link:hover .join_icon path.plus {
+#hero .join_link:hover .join_icon path.plus {
   animation: pulse 0.8s infinite;
 }
 @keyframes pulse {
@@ -34,7 +34,7 @@
     stroke: white;
   }
 }
-.join_link:active .join_icon path.plus {
+#hero .join_link:active .join_icon path.plus {
   animation: none;
 }
 
@@ -47,7 +47,7 @@
   height: 70vh;
 }
 
-.hero__header {
+#hero .hero__header {
   text-align: center;
   font-weight: 900;
   line-height: 0.95em;
@@ -56,7 +56,7 @@
   margin-bottom: 0.25em;
 }
 
-.hero__description {
+#hero .hero__description {
   color: #898989;
   font-weight: 400;
   margin-bottom: 1rem;
@@ -64,7 +64,7 @@
   text-align: center;
 }
 
-.logo {
+#hero .logo {
   opacity: 0.2;
   position: absolute;
   z-index: -1;
@@ -137,7 +137,7 @@
   #hero {
     height: 100vh;
   }
-  .logo {
+  #hero .logo {
     width: 60vw;
   }
 }
@@ -148,7 +148,7 @@
     height: 100vh;
     z-index: -1;
   }
-  .logo {
+  #hero .logo {
     opacity: 0.1;
     width: 80vh;
   }
