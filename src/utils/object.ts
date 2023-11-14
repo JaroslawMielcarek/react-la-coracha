@@ -9,9 +9,12 @@ export function isTheSame<T>(valA: T, valB: T): boolean {
   // console.log({valA, valB})
   // console.log(typeof valA !== typeof valB)
   if (typeof valA !== typeof valB) return false
+
+  if ( (typeof valA === 'undefined') && (typeof valB === 'undefined') ) return true
   // console.log( (typeof valA === 'undefined') || (typeof valB === 'undefined') )
   if ( (typeof valA === 'undefined') || (typeof valB === 'undefined') ) return false
 
+  if ( (valA === null) && (valB === null) ) return true
   // console.log( (valA === null) || (valB === null) )
   if ( (valA === null) || (valB === null) ) return false
   // JSON.stringify ignores orden
