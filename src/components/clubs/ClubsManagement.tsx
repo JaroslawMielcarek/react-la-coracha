@@ -26,7 +26,7 @@ const list = [{
   name: "Just Voley",
   logo: undefined,
   teams: [{name: "A", gender: "Female" }, {name: "B", gender: "Female"}, {name: "A", gender: "Male"}],
-  pavilions: ["hajdahjda", "jdkacakmcasl", "lorem ipsum"]
+  pavilions: ["Colegio Concentrado San Jose, Malaga", "Divino Pastor, Malaga", "Otra Ubicacion, Estepona"]
 }]
 export const ClubsManagement = () => {
   const [initList, setInitList] = useState<TClub[]>(list)
@@ -102,15 +102,12 @@ const Details = ({club, add, hideDetails}: {club: TClub, add: Function, hideDeta
     const result = Object.entries(formState.data).every( ([key, value]) => isTheSame(value, club[key as keyof TClub]) )
     if (result) return <button type="button" className="btn full-width" onClick={() => hideDetails()}>Anular</button>
   
-    return (
-      <>
+    return (<>
         <button type="submit" className="btn full-widtg color">Update Location</button> 
         <button type="button" className="btn color red" onClick={() => resetForm()}>Restablecer</button>
-      </>
-    )
+      </>)
   }
   return (
-    <div>
       <FormContext.Provider value={ { formState, validate, registerInput, setFieldValue, resetForm } }>
         <Form 
           id="clubDetails"
@@ -126,6 +123,5 @@ const Details = ({club, add, hideDetails}: {club: TClub, add: Function, hideDeta
           </div>
         </Form>
       </FormContext.Provider>
-    </div>
     )
 }
