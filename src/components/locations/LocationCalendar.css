@@ -1,0 +1,103 @@
+#locationsCalendars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+#locationCalendar {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 4px;
+  box-shadow: 0 5px 30px var(--blueLight), 0 2px 8px var(--blueMedium);
+  border-radius: var(--borderRadius);
+}
+#locationCalendar #locationName {
+  margin: 0;
+  padding: 8px 0;
+  text-align: center;
+  background-color: var(--blueLight);
+  border-top-left-radius: var(--borderRadius);
+  border-top-right-radius: var(--borderRadius);
+}
+#locationCalendar #controls {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 16px 0;
+}
+#locationCalendar #controls .prev,
+#locationCalendar #controls .next,
+#locationCalendar #controls .date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+}
+#locationCalendar #controls .prev,
+#locationCalendar #controls .next {
+  cursor: pointer;
+}
+
+#locationCalendar #head,
+#locationCalendar #body {
+  display: grid;
+  grid-template-areas: "L M X J V S D";
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: max-content;
+  width: 100%;
+  justify-items: center;
+  padding: 2px 0;
+  gap: 4px;
+}
+
+#locationCalendar #head {
+  padding: 8px 0;
+  margin: 4px 0;
+  border-top: 1px solid var(--blueLight);
+  border-bottom: 1px solid var(--blueLight);
+}
+
+#locationCalendar #courtList {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+#locationCalendar .day {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  height: 48px;
+  width: 48px;
+}
+
+#locationCalendar .day.btn {
+  pointer-events: all;
+  border-radius: 50%;
+  background-color: var(--greyLight);
+}
+
+#locationCalendar .L { grid-column: 1; }
+#locationCalendar .M { grid-column: 2; }
+#locationCalendar .X { grid-column: 3; }
+#locationCalendar .J { grid-column: 4; }
+#locationCalendar .V { grid-column: 5; }
+#locationCalendar .S { grid-column: 6; color: var(--dangerous); }
+#locationCalendar .D { grid-column: 7; color: var(--dangerous); }
+
+@media screen and (max-width: 992px) { 
+  #locationCalendar {
+    max-width: 100%;
+   }
+  #locationCalendar #courtList {
+    flex-direction: column;
+  }
+  #courtList .slot {
+    font-size: small;
+  }
+}

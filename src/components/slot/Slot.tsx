@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { compareHoursMinutesStrings } from "utils/time"
 
 type TSlot = {
@@ -10,10 +10,6 @@ type TSlot = {
 export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, handleCancel}: {slot: TSlot, existingSlots: TSlot[], openTime: string, closeTime: string, addSlot: Function, handleCancel: Function}) => {
   const [data, setData ] = useState(slot)
   const [ errors, setErrors ] = useState<{[key: string]: string[]}>({})
-
-  useEffect(() => {
-    console.log({data, openTime, closeTime})
-  },[data])
 
   const handleSubmit = () => {
     addSlot( data, slot )
@@ -61,12 +57,10 @@ export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, 
   }
   const renderButtons = () => {
     const hasErrors = errors.start?.length || errors.end?.length
-    return (
-      <>
+    return (<>
       { data.start && data.end && !hasErrors && <button className="btn color" onClick={ handleSubmit }>update</button> }
       <button className="btn" onClick={() => handleCancel() }>Anular</button>
-      </>
-    )
+      </>)
   }
   return (
       <div className="slotDetails">
@@ -84,5 +78,25 @@ export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, 
           { renderButtons() }
         </div>
       </div>
+  )
+}
+
+const currentUser = "CurrUser"
+export const SlotDisplay = ({slot, handleSlotToggle}: {slot: TSlot, handleSlotToggle: Function}) => {
+  const [ data, setData ] = useState<TSlot>(slot)
+
+  const handleToggle = (name: string) => {
+    if (!data.takenBy) return setData(state => ({...state, takenBy: name}))
+    if (data.takenBy && data.takenBy === currentUser) return setData(state => ({...state, takenBy: "" }))
+    return null
+  }
+
+  let klass = "btn slot"
+  if (data.takenBy) klass += " color"
+  return (
+    <button type="button" className={ klass } onClick={() => handleToggle(currentUser)}>
+      <p>{ data.start } - { data.end }</p>
+      <p>{ data.takenBy ? data.takenBy : "Free" }</p>
+    </button>
   )
 }

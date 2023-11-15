@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { useError } from "utils/useErrors"
 import withForm from "../form/withForm"
-import { compareHoursMinutesStrings } from "utils/time"
 
 type propTypes = {
     placeholder: string,
@@ -62,21 +61,13 @@ type propTypesTime = {
 }
 
 export const TimeInput = (props: propTypesTime) => {
-// const { renderErrors, hasError } = useError({errors: props.errors, name: props.name})
-const [ error, setError ] = useState<string | null>(null)
 const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const val = e.target.value
-  let err = ""
-  if (!val) err = "Provide hour"
-  if (compareHoursMinutesStrings(val, props.min) < 0) err = "Is too early"
-  if (compareHoursMinutesStrings(val, props.max) > 0) err = "Is too late"
-  setError(err)
   props.onChange(val)
 }
 const renderErrors = () => {
-  if (!error && !props.errors.length) return null
-
-  if (props.errors.length) return (
+  if (!props.errors.length) return null
+  return (
      <ul className="error-messages">
       { props.errors.map((errMsg: string, i: number) => (
         <li key={`slot-error-${i}`} className="error">
@@ -85,16 +76,9 @@ const renderErrors = () => {
       )) }
     </ul>
   )
-  if (error) return (
-    <ul className="error-messages">
-      <li key={`slot-error`} className="error">
-        { error }
-      </li>
-    </ul>
-  )
   
 }
-const klass = props.errors.length || error ? "form-group has-error" : "form-group"
+const klass = props.errors.length ? "form-group has-error" : "form-group"
 
 return (
   <div className={ klass }>
@@ -106,7 +90,7 @@ return (
       className="form-control"
       placeholder={ props.placeholder }
       onChange={ onChange }
-      value={ props.value || '' }
+      value={ props.value }
     />
     { renderErrors() }
   </div>
