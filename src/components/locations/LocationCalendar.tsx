@@ -4,22 +4,22 @@ import Modal from "components/modal/Modal"
 import { SlotDisplay } from "components/slot/Slot"
 import { TLocation, TSlot, TEnglishDayName } from "shared/types"
 import { getEnglishWeekDayName, getMonthName, getWeekShortName } from "utils/translate"
+import { sortedByPropName } from "utils/sort"
 
-
+type TCalendarCourt = {
+  name: string,
+  slots: TSlot[] | undefined,
+  unAvailableDates?: Date[]
+}
 type TCalendarDay = {
   date: Date,
-  courts?:
-    {
-      name: string,
-      slots: TSlot[] | undefined
-    }[]
+  courts?: TCalendarCourt[]
 }
 
 export const LocationsCalendars = ({locations}: {locations: TLocation[]}) => {
-
   return (
     <div id="locationsCalendars">
-      { locations.map( location => <LocationCalendar location={ location} key={ location.name }/> )}
+      { sortedByPropName(locations,"name").map( location => <LocationCalendar location={ location} key={ location.name }/> )}
     </div>
   )
 }
@@ -45,7 +45,7 @@ function addSlotsToMonth(monthDays: { date: Date }[], location: TLocation ): TCa
   if (!courts || !courts.length) return monthDays.map(d => ({ date: d.date }) )
   const daysWithSlots = monthDays.map(day => {
     const dayOfWeek = getEnglishWeekDayName(day.date.getDay())
-    const courtsAvailable = courts.filter(c => c.week[dayOfWeek as TEnglishDayName]).map(c => ({ name: c.name, slots: c.week[dayOfWeek as TEnglishDayName]?.slots }) )
+    const courtsAvailable = courts.filter(c => c.week[dayOfWeek as TEnglishDayName]).map(c => ({ name: c.name, slots: c.week[dayOfWeek as TEnglishDayName]?.slots, unAvailableDates: c.unAvailableDates }) )
     const newDay: TCalendarDay = { date: day.date }
     if (courtsAvailable.length) newDay.courts = courtsAvailable
     return newDay
@@ -64,11 +64,29 @@ export const LocationCalendar = ({location}: {location: TLocation}) => {
 
   const Day = ({day}: {day: TCalendarDay}) => {
     let klass = "prevent-selection day " + getWeekShortName(day.date.getDay())
+
     
     if (day.courts) return <button className={ klass + " btn" } onClick={() => setSelected(day)}>{ day.date.getDate() }</button>
     return <span className={ klass }>{ day.date.getDate() }</span>
   }
   
+  const Court = ({date, court}: {date: Date, court: TCalendarCourt}) => {
+
+    let klass = "court dashed fit"
+    const isUnAvailable =  court.unAvailableDates?.find(d => d.toLocaleDateString() === date.toLocaleDateString())
+
+    console.log(date,  isUnAvailable )
+    if (isUnAvailable) klass += " disabled"
+
+    return (
+      <fieldset className={ klass }>
+        <legend>{ court.name }</legend>
+        <div id="slotList" >
+          { court.slots ? court.slots.map(slot => <SlotDisplay slot={ slot } handleSlotToggle={() => {}} key={ slot.start }/>) : null }
+        </div>
+      </fieldset>
+    )
+  }
   const handleToggleSlot = (slot: TSlot) => {
 
   }
@@ -95,14 +113,7 @@ export const LocationCalendar = ({location}: {location: TLocation}) => {
       { selected ? <Modal onClose={() => setSelected(null)}>
         <div>
           <div id="courtList">
-            { selected.courts ? selected.courts.map(c => (
-              <fieldset className="court dashed fit" key={ c.name }>
-                <legend>{ c.name }</legend>
-                <div id="slotList" >
-                  { c.slots ? c.slots.map(slot => <SlotDisplay slot={ slot } handleSlotToggle={() => {}} key={ slot.start }/>) : null }
-                </div>
-              </fieldset>
-            )) : null}
+            { selected.courts ? sortedByPropName(selected.courts, "name").map( c => <Court court={ c } date={ selected.date } key={ c.name }/> ) : null}
           </div>
           <div className="buttons">
             <button type="button" className="btn full-width" onClick={() => setSelected(null)}>Cerrar</button>

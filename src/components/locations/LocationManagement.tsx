@@ -1,5 +1,5 @@
 import "./LocationManagement.css"
-import { TextInputForm } from "components/TextInput/TextInput"
+import { DatePickerInput, TextInput, TextInputForm } from "components/TextInput/TextInput"
 import Form from "components/form/Form"
 import { FormContext, useFormState } from "components/form/useFormState"
 import { CourtsInputForm } from "components/slot/Court"
@@ -10,6 +10,7 @@ import { requiredValidator } from "utils/validators"
 import { LocationsCalendars } from "./LocationCalendar"
 import Modal from "components/modal/Modal"
 import { TLocation } from "shared/types"
+import { sortedByPropName } from "utils/sort"
 
 const list = [{
   name: "IES Campanillas",
@@ -82,13 +83,12 @@ export const LocationManagement = () => {
           <p className="column courts">No. Pistas</p>
         </div>
         <ul>
-          { renderElements(initList || [])}
+          { renderElements( sortedByPropName(initList || [], "name" ))}
         </ul>
       </Table>
       { selected ? <Modal onClose={() => setSelected(null)} >
         <Details location={ selected } add={ handleSubmit } hideDetails={ () => setSelected(null) }/> 
       </Modal> : null }
-
       <h1>Disponibilidad de Pabellones</h1>
       <p className="extra-message">Visible para entrenadores</p>
       <LocationsCalendars locations={ initList }/>

@@ -16,6 +16,8 @@
   gap: 16px;
 }
 
-/* #slotList .slot.taken {
-
-} */
+#datesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}

@@ -1,5 +1,5 @@
 import "./Court.css"
-import { TextInput, TimeInput } from "components/TextInput/TextInput"
+import { DatesPicker, TextInput, TimeInput } from "components/TextInput/TextInput"
 import { TickButton } from "components/tickButton/TickButton"
 import { useState } from "react"
 import { isTheSame } from "utils/object"
@@ -9,6 +9,7 @@ import Modal from "components/modal/Modal"
 import withForm from "components/form/withForm"
 import { TEnglishDayName, TSlot, TCourt, TWeek, TDay } from "shared/types"
 import { translateDayOfWeek } from "utils/translate"
+import { sortedByPropName } from "utils/sort"
 
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -37,12 +38,11 @@ export const CourtsInput = (props: propsTypes) => {
     if (r) props.onChange( courts.filter(c => c.name !== court.name))
   }
   
-  return (
-    <>
+  return (<>
       { !selected ? <button type="button" className="btn form-group" onClick={() => setSelected(initCourt)}>Add new Court</button> : null }
       <label className="extra-message">Pistas</label>
       { courts ?
-        courts.map(c => (
+        sortedByPropName(courts, "name").map(c => (
           <div className="court" key={ c.name }>
             <button type="button" className="btn color" onClick={() => setSelected(c)}>Editar</button>
             <p>{c.name}</p>
@@ -52,8 +52,7 @@ export const CourtsInput = (props: propsTypes) => {
       { selected ? <Modal onClose={() => setSelected(null)}>
           <Details court={ selected } handleSubmit={ handleSubmit } hideDetails={() => setSelected(null)}/> 
         </Modal> : null }
-    </>
-  )
+    </>)
 }
 export const CourtsInputForm = withForm(CourtsInput)
 
@@ -82,7 +81,7 @@ const Details = ({court, handleSubmit, hideDetails}: {court: TCourt, handleSubmi
     <div id="courtDetails">
       <TextInput name="name" placeholder="Exterior" value={ data.name } label="Nombre de la Pista" type="text" errors={ data.name ? [] : ["Provide name"] } onChange={ handleUpdateCourtName } />
       <p className="extra-message">Tick day if is generally availiable</p>
-      <div id="week">
+      <div id="week" className="form-group">
         { data.week ? Object.entries(data.week).map( ([key, value]) => (
           <fieldset className="dashed fit" key={ key }>
             <legend>
@@ -92,6 +91,7 @@ const Details = ({court, handleSubmit, hideDetails}: {court: TCourt, handleSubmi
           </fieldset>
         )) : null }
       </div>
+        <DatesPicker name="unAvailableDates" label="Fechas prohibidas" value={data.unAvailableDates ? data.unAvailableDates : []} onChange={(dates: Date[]) => setData(state => ({...state, unAvailableDates: dates})) }/>
       <div className="buttons">
         { renderButtons() }
         <button type="button" className="btn color red" onClick={() => setData(court)}>Restablece</button>
@@ -146,8 +146,7 @@ const Day = ({name, day, updateDay}: {name: string, day: TDay, updateDay: Functi
         <button type="button" className="btn" onClick={() => setSelected( {start: data.openTime, end: "", takenBy: "" } )}>Add Slot</button>
       </div> 
     )
-    return (
-      <>
+    return (<>
       { data.slots.map( (slot, index, array) => (
           <div id="slotList" key={index}>
             { (!array[index - 1] && ( compareHoursMinutesStrings(slot.start, data.openTime) > 0 ) ) && <button type="button" className="btn" onClick={() => setSelected( { start: data.openTime, end: slot.start, takenBy: "" } ) } >Add Slot</button> }
@@ -160,8 +159,7 @@ const Day = ({name, day, updateDay}: {name: string, day: TDay, updateDay: Functi
           </div>
         ))
       }
-      </>
-    )
+      </>)
   }
 
   const renderButtons = () => {

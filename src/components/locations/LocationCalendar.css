@@ -65,6 +65,10 @@
   flex-wrap: wrap;
   gap: 16px;
 }
+#locationCalendar #courtList .court.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
 
 #locationCalendar .day {
   display: inline-flex;

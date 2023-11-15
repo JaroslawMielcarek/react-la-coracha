@@ -25,7 +25,8 @@ export type TLocation = {
 
 export type TCourt = {
   name: string,
-  week: TWeek
+  week: TWeek,
+  unAvailableDates?: Date[]
 }
 export type TWeek = {
   [key in TEnglishDayName]: TDay | null
