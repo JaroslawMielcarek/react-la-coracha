@@ -29,6 +29,7 @@ export const PlayersManagement = () => {
           <p className='column sort' onClick={ () => setSortBy("nick") }>Nick</p>
           <p className='column'>No.</p>
           <p className='column'>Género</p>
+          <p className='column sort' onClick={ () => setSortBy("underAge") }>Menor</p>
           <p className='column sort' onClick={ () => setSortBy("team") }>Equipo</p>
           <p className='column'></p>
         </div>
@@ -42,6 +43,7 @@ export const PlayersManagement = () => {
             <p className="column">{ player.nick }</p>
             <p className="column">{ player.number }</p>
             <p className="column">{ player.isFemale ? "Mujer" : "Hombre" }</p>
+            <p className="column">{ player.underAge ? "Sí" : "No" }</p>
             <p className="column">{ player.team }</p>
             
           </div>
@@ -92,6 +94,11 @@ const PlayerDetails = ({p, sendData, hideDetails}: {p: TPlayer, sendData: Functi
             label="MemberID"
             placeholder="123"
             validators={ [requiredValidator] }
+            />
+          <TickButtonForm
+            name="underAge"
+            label="Menor de edad"
+            validators={ []}
             />
           <TextInputForm
             name="nick"
