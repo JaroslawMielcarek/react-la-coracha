@@ -21,7 +21,6 @@ type TClub = {
   pavilions?: string[]
 }
 
-
 const list = [{
   name: "Just Voley",
   logo: undefined,
