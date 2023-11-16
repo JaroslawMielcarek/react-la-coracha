@@ -2,6 +2,15 @@ export const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio
 const WEEK_DAYS = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado']
 export const WEEK_DAYS_SHORT = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
+export function compareHoursMinutesStrings( val1, val2 ) {
+  const [startHour1, startMinutes1] = val1.split(":")
+  const [startHour2, startMinutes2] = val2.split(":")
+  const time1 = new Date( new Date().setHours( parseInt(startHour1), parseInt(startMinutes1) ) )
+  const time2 = new Date( new Date().setHours( parseInt(startHour2), parseInt(startMinutes2) ) )
+
+  return time1 < time2 ? -1 : time1 > time2 ? 1 : 0
+}
+
 export function generateHoursArray (hour, maxHour, slot) {
   const arr = []
   while (hour <= maxHour) {

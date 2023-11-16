@@ -1,0 +1,33 @@
+
+#courtDetails #week {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#courtDetails #week .day,
+#slotList {
+  display: flex;
+  flex-direction: column;
+  /* width: fit-content; */
+  gap: 16px;
+}
+#slotList {
+  margin: 24px 0;
+}
+#courtDetails .slot {
+  border: 1px solid var(--blueDark);
+  position: relative;
+}
+#courtDetails .slot .btn.remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+@media screen and (max-width: 992px) {
+  #week {
+    max-width: 100vw;
+  }
+}

@@ -19,6 +19,7 @@
     margin: 0;
     /* // clip-path: circle(32px at center); */
     border: 1px dashed var(--blueDark);
+    border-radius: var(--borderRadius);
   }
 .uploadFile input {
   display: none;
@@ -29,6 +30,7 @@
   align-items: center;
   /* max-width: 20ch; */
   border: 1px dashed var(--blueDark);
+  border-radius: var(--borderRadius);
   padding: 4px 8px;
-
+  cursor: pointer;
 }

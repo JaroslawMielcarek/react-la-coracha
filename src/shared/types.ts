@@ -1,4 +1,6 @@
 
+export type TEnglishDayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
+
 export type TDateTime = {
   date: string,
   time: string
@@ -10,6 +12,42 @@ export interface  IImage {
 }
 export interface IDateTime {
   dateTime: TDateTime
+}
+
+// LOCATION
+
+export type TLocation = {
+  _id?: string,
+  name: string,
+  address: string,
+  courts?: TCourt[]
+}
+
+export type TCourt = {
+  name: string,
+  week: TWeek,
+  unAvailableDates?: Date[]
+}
+export type TWeek = {
+  [key in TEnglishDayName]: TDay | null
+  // Monday: TDay | null,
+  // Tuesday: TDay | null,
+  // Wednesday: TDay | null,
+  // Thursday: TDay | null,
+  // Friday: TDay | null,
+  // Saturday: TDay | null,
+  // Sunday: TDay | null
+}
+
+export type TDay = {
+  openTime: string,
+  closeTime: string,
+  slots: TSlot[]
+}
+export type TSlot = {
+  start: string,
+  end: string,
+  takenBy: string | undefined,
 }
 
 // MATCH

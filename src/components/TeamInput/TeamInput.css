@@ -1,0 +1,30 @@
+
+.group {
+  display: flex;
+  gap: 8px;
+}
+.teamsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 8px 0;
+  max-width: 300px;
+}
+
+.teamsList span {
+  display: inline-block;
+  text-align: center;
+  min-width: 6ch;
+  padding: 8px 16px;
+  border: 1px solid var(--greyLight);
+  border-radius: var(--borderRadius);
+  cursor: pointer;
+}
+
+.teamsList .female {
+  color: var(--pinkDark);
+}
+
+.teamsList .male {
+  color: var(--blueDark);
+}

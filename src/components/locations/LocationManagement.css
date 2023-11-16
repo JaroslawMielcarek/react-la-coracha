@@ -1,0 +1,23 @@
+
+
+#locationManagement .table-head,
+#locationManagement .table-row {
+  grid-template-columns: 60px 1fr 1fr 1fr 60px;
+}
+
+#LocationDetails .court {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--blueLight);
+  border-radius: var(--borderRadius);
+  margin: 0 0 4px;
+  gap: 16px;
+}
+
+#datesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
