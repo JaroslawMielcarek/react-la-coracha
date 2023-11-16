@@ -6,6 +6,7 @@ import { SelectInput } from "components/selectInput/SelectInput"
 import { useNavigate } from "react-router-dom"
 import { UserContext } from "utils/useUser"
 import { TPropertyWithPermission } from "shared/types"
+import { isTheSame } from "utils/object"
 
 type TRole = {
   name: string
@@ -40,6 +41,8 @@ const topPermision = (p: TPlayer) => {
   const userPermissions = p.roles.map(r => r.name)
   if (userPermissions.includes('admin')) return 'admin'
   if (userPermissions.includes('moderator')) return 'moderator'
+  if (userPermissions.includes('coach')) return 'coach'
+  if (userPermissions.includes('assistant')) return 'assistant'
   if (userPermissions.includes('player')) return 'player'
   return 'user'
 }
@@ -60,7 +63,7 @@ const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[
     }) )
   }
   const handlePermissionChange = (memberID: string, value: TRole[]) => {
-    updatePermision("admin/updateUserPermissions", {roles: value.map(r => r.name), memberID: memberID }, "Update user permission")
+    updatePermision("admin/updateUserPermissions", {roles: value.map(r => r.name), memberID: memberID })
   }
   
   return (
@@ -74,7 +77,7 @@ const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[
           <p className="column sort" onClick={ () => handleSortSelection("permission")}>Permiso</p>
       </div>
       <div className="table-body">
-        { list && list.map( (p, index) => <Player p={ p } handlePermissionChange={ handlePermissionChange} key={ p.memberID }/>) }
+        { list ? list.map( (p, index) => <Player p={ p } handlePermissionChange={ handlePermissionChange} key={ p.memberID }/>) : null }
       </div>
     </Table>
   )
@@ -83,11 +86,6 @@ const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[
 const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange: Function}) => {
   const [isEditing, setIsEditing] = useState(false)
   const [person, setPerson] = useState<TPlayer>(p)
-  const [hasChanges, setHasChanges] = useState(false)
-
-  useEffect(()=> {
-    (person.roles.length !== p.roles.length) ? setHasChanges(true) : setHasChanges(false)
-  },[person, p])
 
   const handleChange = () => {
     handlePermissionChange(person.memberID, person.roles)
@@ -96,6 +94,8 @@ const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange
   const handleInputChange = (val: string) => {
     const rolesList = [{name: "user"}]
     if (val === "player") return alert("Si desea establecer permiso como 'player', agregue usuario a cualquier equipo!")
+    if (val === "assistant") rolesList.push({name: "assistant"})
+    if (val === "coach") rolesList.push({name: "coach"})
     if (val === "moderator") rolesList.push({name: "moderator"})
     if (val === "admin") rolesList.push(...[{name: "moderator"}, {name: "admin"}])
     setPerson(state => ({
@@ -106,12 +106,14 @@ const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange
 
   const renderActionButton = () => {
     if (!isEditing) return <button className='btn color' onClick={ () => setIsEditing(true) }>Editar</button>
-    if (!hasChanges) return <button className='btn white' onClick={ () => setIsEditing(false) }>Anular</button>
+    const allTheSame = Object.entries(person).every( ([key, value]) => isTheSame(value, p[key as keyof TPlayer]) )
+
+    if (allTheSame) return <button className='btn white' onClick={ () => setIsEditing(false) }>Anular</button>
     return <button className='btn color red' onClick={ handleChange }>Guardar</button>
   }
 
   const renderRoles = () => {
-    if (isEditing) return <SelectInput name="roles" label="" value={ topPermision(person)} options={["user", "player", "moderator", "admin"]} onChange={handleInputChange} />
+    if (isEditing) return <SelectInput name="roles" label="" value={ topPermision(person)} options={["user", "player", "assistant", "coach", "moderator", "admin"]} onChange={handleInputChange} />
     return <p className="column">{ topPermision(person) }</p>
   }
 
