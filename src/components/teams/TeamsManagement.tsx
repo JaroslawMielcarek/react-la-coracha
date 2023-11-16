@@ -50,7 +50,7 @@ export const TeamsManagement = () => {
   }
   return (
     <div id="teamsManagement">
-      { isAdmin() && <button id="newTeam" className="btn white" onClick={() => setSelectedTeam({name: '', gender: "Male", players: []}) }>Crear nuevo Equipo</button> }
+      { isAdmin() && <button id="newTeam" className="btn white" onClick={() => setSelectedTeam({name: '', gender: "Male", players: [], coach: ''}) }>Crear nuevo Equipo</button> }
       <Table>
         <div className="table-head">
           <p className="column action"></p>
@@ -100,6 +100,12 @@ const TeamDetails = ({t, sendData, hideDetails}: {t: TTeam, sendData: Function, 
   const handleSubmit = async () => {
     const data = formState.data as TTeam
     if (!data) return
+
+    const coach = clubPlayers?.find(p => p.nick === data.coach)
+    data.coach = coach ? coach._id : ''
+    const assistant = clubPlayers?.find(p => p.nick === data.assistant)
+    data.assistant = assistant ? assistant._id : ''
+
     const r = data._id ? await sendData("moderator/updateTeam", {...data, players: teamPlayers}) : await sendData("moderator/createTeam", {...data, players: teamPlayers})
     if (r) hideDetails()
   }
@@ -135,6 +141,8 @@ const TeamDetails = ({t, sendData, hideDetails}: {t: TTeam, sendData: Function, 
       <TextInputForm name="name" label="Nombre" placeholder="Bees" validators={ [requiredValidator] }/>
       <TextInputForm name="league" label="Liga" placeholder="Afade" validators={ [] }/>
       <SelectInputForm name="gender" label="Género" options={["Female", "Male", "Mix"]} validators={ [requiredValidator] }/>
+      <SelectInputForm name="coach" label="Entrenador" options={clubPlayers?.filter(p => p.nick).map(p => p.nick)} validators={ [requiredValidator] }/>
+      <SelectInputForm name="assistant" label="Asistente" options={clubPlayers?.filter(p => p.nick).map(p => p.nick).concat("")} validators={ [] }/>
       <TextAreaInputForm name="description" label="Descripción" placeholder="Descripción del equipo" validators={ [] }/>
       { renderFile() }
       <fieldset className="dashed">
