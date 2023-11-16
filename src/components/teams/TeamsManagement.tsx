@@ -123,12 +123,10 @@ const TeamDetails = ({t, sendData, hideDetails}: {t: TTeam, sendData: Function, 
     const difference = t.players?.filter( p => !teamPlayers.includes(p) ).concat(teamPlayers.filter(tp => !t.players?.includes(tp))).length
     const hasChanges =  !(result && !difference)
     if (!hasChanges) return <button className="btn full-width" type="button" onClick={ () => hideDetails() }>Anular</button>
-    return (
-      <>
+    return (<>
         <button className="btn full-width color" type="submit">Guardar</button>
         <button className="btn color red" type="reset">Restablecer</button>
-      </>
-    )
+      </>)
   }
   return (
     <FormContext.Provider value={ { formState, validate, registerInput, setFieldValue, resetForm } }>
