@@ -5,19 +5,14 @@ import { useFetch } from "utils/useFetch"
 import { SelectInput } from "components/selectInput/SelectInput"
 import { useNavigate } from "react-router-dom"
 import { UserContext } from "utils/useUser"
-import { TPropertyWithPermission } from "shared/types"
+import { TPropertyWithPermission, TPlayer } from "shared/types"
 import { isTheSame } from "utils/object"
 
 type TRole = {
   name: string
 }
-type TPlayer = {
-  memberID: string,
-  nick: TPropertyWithPermission,
-  isFemale: boolean,
-  team: string,
-  roles: TRole[]
-}
+type TPlayerWithRole = TPlayer & { roles: TRole[] }
+
 export const Permissions = () => {
   const [playersPermisions, updatePermision] = useFetch({url: "admin/getAllUserPermissions", errorTitle: "Permission Manager"})
   const [memberIDList, sendData] = useFetch({url: "admin/getAllMembersIDs", errorTitle: "Member Manager"})
@@ -31,13 +26,13 @@ export const Permissions = () => {
  return (
     <section>
       <h1>Área de Permisos</h1>
-      <PlayersPermissionManager players={ playersPermisions as TPlayer[] } updatePermision={ updatePermision } />
+      <PlayersPermissionManager players={ playersPermisions as TPlayerWithRole[] } updatePermision={ updatePermision } />
       <MemberIDManager memberIDList={ memberIDList as TMemberID[] } sendData={ sendData } />
     </section>
   )
 }
 
-const topPermision = (p: TPlayer) => { 
+const topPermision = (p: TPlayerWithRole) => { 
   const userPermissions = p.roles.map(r => r.name)
   if (userPermissions.includes('admin')) return 'admin'
   if (userPermissions.includes('moderator')) return 'moderator'
@@ -47,18 +42,19 @@ const topPermision = (p: TPlayer) => {
   return 'user'
 }
 
-const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[] | undefined, updatePermision: Function}) => {
-  const [list, setList] = useState<TPlayer[]>(players || [])
+const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayerWithRole[] | undefined, updatePermision: Function}) => {
+  const [list, setList] = useState<TPlayerWithRole[]>(players || [])
   
   useEffect(() => {
     setList(players || [])
   }, [players])
 
   const handleSortSelection = (val: string) => {
-    const propName = val as keyof TPlayer
-    setList([...list].sort( (a: TPlayer, b: TPlayer) => {
-      const valA = val === "name" ? a.nick.value : val === "permission" ? topPermision(a) : a[propName]
-      const valB = val === "name" ? b.nick.value : val === "permission" ? topPermision(b) : b[propName]
+    const propName = val as keyof TPlayerWithRole
+    setList([...list].sort( (a: TPlayerWithRole, b: TPlayerWithRole) => {
+      const valA = val === "permission" ? topPermision(a) : a[propName]?.toString()
+      const valB = val === "permission" ? topPermision(b) : b[propName]?.toString()
+      if (!valA || !valB) return -1
       return valA.toString().localeCompare(valB.toString(),'en' )
     }) )
   }
@@ -71,8 +67,9 @@ const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[
       <div className="table-head">
           <p className="column"></p>
           <p className="column sort" onClick={ () => handleSortSelection("memberID")}>MemberID</p>
-          <p className="column sort" onClick={ () => handleSortSelection("name")}>Nick</p>
+          <p className="column sort" onClick={ () => handleSortSelection("nick")}>Nick</p>
           <p className="column gender">Género</p>
+          <p className='column sort' onClick={ () => handleSortSelection("underAge") }>Menor</p>
           <p className="column team sort" onClick={ () => handleSortSelection("team")}>Equipo</p>
           <p className="column sort" onClick={ () => handleSortSelection("permission")}>Permiso</p>
       </div>
@@ -83,9 +80,9 @@ const PlayersPermissionManager = ({players, updatePermision}: {players: TPlayer[
   )
 }
 
-const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange: Function}) => {
+const Player = ({p, handlePermissionChange}: {p: TPlayerWithRole, handlePermissionChange: Function}) => {
   const [isEditing, setIsEditing] = useState(false)
-  const [person, setPerson] = useState<TPlayer>(p)
+  const [person, setPerson] = useState<TPlayerWithRole>(p)
 
   const handleChange = () => {
     handlePermissionChange(person.memberID, person.roles)
@@ -106,7 +103,7 @@ const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange
 
   const renderActionButton = () => {
     if (!isEditing) return <button className='btn color' onClick={ () => setIsEditing(true) }>Editar</button>
-    const allTheSame = Object.entries(person).every( ([key, value]) => isTheSame(value, p[key as keyof TPlayer]) )
+    const allTheSame = Object.entries(person).every( ([key, value]) => isTheSame(value, p[key as keyof TPlayerWithRole]) )
 
     if (allTheSame) return <button className='btn white' onClick={ () => setIsEditing(false) }>Anular</button>
     return <button className='btn color red' onClick={ handleChange }>Guardar</button>
@@ -123,8 +120,9 @@ const Player = ({p, handlePermissionChange}: {p: TPlayer, handlePermissionChange
         { renderActionButton() }
       </div>
       <p className="column">{ p.memberID }</p>
-      <p className="column">{ p.nick.value }</p>
+      <p className="column">{ p.nick }</p>
       <p className="column gender">{ p.isFemale ? "Mujer" : "Hombre" }</p>
+      <p className="column">{ p.underAge ? "Sí" : "No" }</p>
       <p className="column team">{ p.team }</p>
       { renderRoles() }
       </div>

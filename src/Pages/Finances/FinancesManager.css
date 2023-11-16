@@ -1,7 +1,7 @@
 #financesManager .table-row,
 #financesManager .table-head {
   /* // max 375px 220 = 150 / 2 = 75 */
-  grid-template-columns: 60px 30px minmax(60px, 1fr) 60px 1fr 80px;
+  grid-template-columns: 60px 30px minmax(60px, 1fr) 60px 60px 1fr 80px;
 }
 #sponsorsManager .table-row,
 #sponsorsManager .table-head {
@@ -74,6 +74,11 @@
     /* // max 375px 220 = 150 / 2 = 75 */
     grid-template-columns: 60px 1fr 4ch 6ch 5ch 40px;
   }
+
+  #financesManager .table-row .team,
+  #financesManager .table-head .team,
+  #financesManager .table-row .gender,
+  #financesManager .table-head .gender,
   #sponsorsManager .link {
     display: none;
   }

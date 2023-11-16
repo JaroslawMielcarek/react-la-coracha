@@ -1,7 +1,7 @@
 #permissionsManager .table-row,
 #permissionsManager .table-head {
   /* // max 375px 220 = 150 / 2 = 75 */
-  grid-template-columns: 60px 8ch minmax(60px, 1fr) 60px 1fr 120px;
+  grid-template-columns: 60px 8ch minmax(60px, 1fr) 60px 60px 1fr 120px;
 }
 #memberIDManager fieldset {
   display: flex;
@@ -42,7 +42,7 @@
   #permissionsManager .table-row,
   #permissionsManager .table-head {
     /* // max 375px 220 = 150 / 2 = 75 */
-    grid-template-columns: 60px 8ch 1fr 1fr ;
+    grid-template-columns: 60px 8ch 1fr 60px 1fr ;
   }
   #permissionsManager .gender,
   #permissionsManager .team {

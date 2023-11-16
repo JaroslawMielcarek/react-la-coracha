@@ -15,7 +15,7 @@ import { TickButton, TickButtonForm } from "components/tickButton/TickButton"
 import { SelectInput } from "components/selectInput/SelectInput"
 import { UserContext } from "utils/useUser"
 import { useNavigate } from "react-router-dom"
-import { TMonthFinancial, TPayment, TPropertyWithPermission, TSponsor } from "shared/types"
+import { TMonthFinancial, TPayment, TSponsor, TPlayer } from "shared/types"
 
 export const FinanceManager = () => {
   const { isLogged } = useContext(UserContext)
@@ -44,7 +44,7 @@ type TDownloadPeriod = {
   start: string
   end: string
 }
-const DownloadReport = (downloadPeriod: TDownloadPeriod, list: TPlayer[]) => {
+const DownloadReport = (downloadPeriod: TDownloadPeriod, list: TPlayerWithPaymentsBalance[]) => {
   const start = downloadPeriod.start
   const end = downloadPeriod.end
   const yearStart = parseInt(start.split('-')[0])
@@ -72,7 +72,7 @@ const DownloadReport = (downloadPeriod: TDownloadPeriod, list: TPlayer[]) => {
     }
     return listOfM
   }
-  const GetUsefullData = (list: TPlayer[]) => {
+  const GetUsefullData = (list: TPlayerWithPaymentsBalance[]) => {
     const start = new Date(downloadPeriod.start)
     const end = new Date(downloadPeriod.end)
     const listOfM = generateMonthsList()
@@ -101,7 +101,7 @@ const DownloadReport = (downloadPeriod: TDownloadPeriod, list: TPlayer[]) => {
 }
 
 const PlayersFinanceDownloader = () => {
-  const [players] = useFetch<TPlayer[]>({ url: "admin/getAllUsersBalance", errorTitle: "Players Finance Downloader"})
+  const [players] = useFetch<TPlayerWithPaymentsBalance[]>({ url: "admin/getAllUsersBalance", errorTitle: "Players Finance Downloader"})
   const regex = new RegExp(/^(20\d{2}|0(?!0)\d|[1-9]\d)-(1[0-2]|0[1-9])$/)
   const currentMonth = new Date().getMonth() + 1
   const currentYearMonth = ( new Date().getFullYear() ) + "-" + ( currentMonth < 10 ? `0${currentMonth}` : currentMonth )
@@ -139,14 +139,7 @@ const PlayersFinanceDownloader = () => {
   )
 }
 
-type TPlayer = {
-  memberID: string,
-  nick: TPropertyWithPermission,
-  isFemale: boolean,
-  team: string,
-  balance: string
-  payments: TMonthFinancial[]
-}
+type TPlayerWithPaymentsBalance = TPlayer & { balance: string, payments: TMonthFinancial[] }
 
 
 type PaymentContextType = {
@@ -163,10 +156,10 @@ const PaymentContext = createContext<PaymentContextType>({
 })
 
 const PlayersPayments = () => {
-  const [players, sendData] = useFetch<TPlayer[]>({ url: "admin/getAllUsersBalance", errorTitle: "Finance Manager"})
-  const [list, setList] = useState<TPlayer[]>(players || [])
+  const [players, sendData] = useFetch<TPlayerWithPaymentsBalance[]>({ url: "admin/getAllUsersBalance", errorTitle: "Finance Manager"})
+  const [list, setList] = useState<TPlayerWithPaymentsBalance[]>(players || [])
   const [selectedFilter, setSelectedFilter] = useState("Todos")
-  const [selectedPlayer, setSelectedPlayer] = useState<TPlayer | null>(null)
+  const [selectedPlayer, setSelectedPlayer] = useState<TPlayerWithPaymentsBalance | null>(null)
   const [showNewMonth, setShowNewMonth] = useState(false)
 
   useEffect(() => {
@@ -186,13 +179,14 @@ const PlayersPayments = () => {
     }
   },[selectedFilter, players])
 
-  const handleEdit = (player: TPlayer) => setSelectedPlayer(player)
+  const handleEdit = (player: TPlayerWithPaymentsBalance) => setSelectedPlayer(player)
   
   const handleSortSelection = (val: string) => {
-    const propName = val as keyof TPlayer
-    setList( [...list].sort( (a: TPlayer, b: TPlayer) => {
-      const valA = val === "name" ? a.nick.value : a[propName] ? a[propName] : '0'
-      const valB = val === "name" ? b.nick.value : b[propName] ? b[propName] : '0'
+    const propName = val as keyof TPlayerWithPaymentsBalance
+    setList( [...list].sort( (a: TPlayerWithPaymentsBalance, b: TPlayerWithPaymentsBalance) => {
+      const valA = a[propName] ? a[propName] : '0'
+      const valB = b[propName] ? b[propName] : '0'
+      if (!valA || !valB) return -1
       return valA.toString().localeCompare(valB.toString(),'en', { numeric: (val === "name" || val ==="gender") ? false : true } )
     }) )
   }
@@ -222,8 +216,9 @@ const PlayersPayments = () => {
           <p className="column"></p>
           <p className="column sort" onClick={() => handleSortSelection("memberID") }>ID</p>
           <p className="column sort" onClick={() => handleSortSelection("name") }>Nick</p>
-          <p className="column">Género</p>
-          <p className="column sort" onClick={() => handleSortSelection("team") }>Equipo</p>
+          <p className="column gender">Género</p>
+          <p className="column sort" onClick={() => handleSortSelection("underAge") }>Menor</p>
+          <p className="column team sort" onClick={() => handleSortSelection("team") }>Equipo</p>
           <p className="column sort" onClick={() => handleSortSelection("balance") }>€ Balance</p>
         </div>
         <div className="table-body">
@@ -233,9 +228,10 @@ const PlayersPayments = () => {
                 <button className="btn color" onClick={ () => handleEdit(p) }>Editar</button>
               </div>
               <p className="column">{ p.memberID }</p>
-              <p className="column">{ p.nick.value }</p>
-              <p className="column">{ p.isFemale ? "Mujer" : "Hombre" }</p>
-              <p className="column">{ p.team }</p>
+              <p className="column">{ p.nick }</p>
+              <p className="column gender">{ p.isFemale ? "Mujer" : "Hombre" }</p>
+              <p className="column">{ p.underAge ? "Sí" : "No" }</p>
+              <p className="column team">{ p.team }</p>
               <p className="column">{ p.balance }</p>
             </div>
           )) }

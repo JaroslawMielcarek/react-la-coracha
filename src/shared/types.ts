@@ -104,7 +104,8 @@ export type TPlayer = {
   inTeamPerformance: IvoleyStats,
   isFemale: boolean,
   team: string,
-  practices: TPlayerPractice
+  practices: TPlayerPractice,
+  underAge?: boolean
 }
 
 export type TPropertyWithPermission = {
