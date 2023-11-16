@@ -72,6 +72,8 @@ export type TTeam = {
   _id?: string,
   name: string,
   gender: "Male" | "Female",
+  coach: string,
+  assistant?: string,
   league?: string,
   players?: TPlayer[],//string[],
   description?: string,
