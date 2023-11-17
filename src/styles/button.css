@@ -11,6 +11,10 @@
   line-height: 1rem;
   font-size: 1rem;
   text-align: center;
+  opacity: 1;
+}
+.btn.hidden {
+  opacity: 0;
 }
 .btn:active {
   transform: scale(0.94);

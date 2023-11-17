@@ -60,16 +60,16 @@
 
 
 @media only screen and (min-width: 740px){
-  .list {
+  #calendar .list {
     max-height: calc(4 * 75px);
   }
-  .list .large {
+  #calendar .list .large {
     max-height: calc(5 * 75px);
   }
 }
 
 
-.match {
+#calendar .match {
   display: flex;
   justify-content: center;
   padding-top: 32px;
@@ -78,7 +78,7 @@
   z-index: 1;
 }
 
-.match::after{
+#calendar .match::after{
   content: '';
   position: absolute;
   left: 0;
@@ -94,30 +94,30 @@
   /* filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4c00ed",endColorstr="#7d36ff",GradientType=1); */
 }
 
-.match.friendly::after{
+#calendar .match.friendly::after{
   background: var( --pastMatch-primary);
   background: -moz-linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
   background: -webkit-linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
   background: linear-gradient( 180deg, var( --friendlyMatch-primary ) 0%, var( --friendlyMatch-secondary ) 100% );
 }
-.match.past {
+#calendar .match.past {
   filter: grayscale(.6);
 }
 
-.team,
-.match-info {
+#calendar .team,
+#calendar .match-info {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-.team {
+#calendar .team {
   min-width: 110px;
   user-select: none;
   filter: drop-shadow(0 0 20px var( --greyDark ));
 }
-.team .club-logo {
+#calendar .team .club-logo {
   width: 64px;
   height: 64px;
   padding: 8px;
@@ -129,79 +129,79 @@
 /* .team .club-logo {
 
 } */
-.team .club-name,
-.team .team-name,
-.team .result-sets {
+#calendar .team .club-name,
+#calendar .team .team-name,
+#calendar .team .result-sets {
   color: var( --text-light );
 }
-.team .club-name {
+#calendar .team .club-name {
   text-transform: capitalize;
   /* // font-size: 1.1rem; */
   margin-top: 0;
   margin-bottom: .025em;
   max-width: 12ch;
 }
-.team .team-name {
+#calendar .team .team-name {
   text-transform: uppercase;
   font-weight: 200;
 }
-.team .result-sets {
+#calendar .team .result-sets {
   font-size: 1.75rem;
   font-weight: 300;
   margin-top: .25em;
 }
 
-.match-info {
+#calendar .match-info {
   font-family: 'Lato', sans-serif;
   margin: 0 5vw;
 }
-.match-info .league{
+#calendar .match-info .league{
   min-height: 1.4rem;
 }
-.match-info .type{
+#calendar .match-info .type{
   color: var( --text );
 }
-.match-info .versus,
-.match-info .date,
-.match-info .time,
-.match-info .location,
-.match-info .hour,
-.match-info .friendly {
+#calendar .match-info .versus,
+#calendar .match-info .date,
+#calendar .match-info .time,
+#calendar .match-info .location,
+#calendar .match-info .hour,
+#calendar .match-info .friendly {
   color: var( --text-light );
 }
-.match-info .versus{
+#calendar .match-info .versus{
   font-size: 3rem;
   line-height: 3rem;
   text-shadow: 0 0 2px var( --text );
 }
-.match-info .location{
+#calendar .match-info .location{
   font-weight: 200;
 }
 
 @media only screen and (min-width: 1070px){
-  .match::after {
+  #calendar .match::after {
     top: 88px;
   }
-  .match-info {
+  #calendar .match-info {
     margin-top: 12px;
   }
-  .match-info .versus {
+  #calendar .match-info .versus {
     font-size: 3.4rem;
   }
-  .team .club-logo {
+  #calendar .team .club-logo {
     width: 92px;
     height: 92px;
     clip-path: circle(46px at center);
   }
 }
 @media only screen and (min-width: 1400px){
-  .match::after {
+  #calendar .match::after {
     top: 104px; 
   }
-  .match-info {
+  #calendar .match-info {
     margin-top: 32px;
   }
-  .team .club-logo{
+  #calendar .team .club-logo{
     width: 128px;
     height: 128px;
     clip-path: circle(64px at center);

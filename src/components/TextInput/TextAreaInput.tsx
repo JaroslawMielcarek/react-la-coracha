@@ -8,14 +8,16 @@ type propTypes = {
     value: string,
     label: string,
     errors: string[],
-    onChange: Function
+    onChange: Function,
+    rows?: number,
+    cols?: number
   }
 
 export const TextAreaInput = (props: propTypes) => {
   const { renderErrors, hasError } = useError({errors: props.errors, name: props.name})
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let val = e.target.value
+    const val = e.target.value
     props.onChange(val)
   }
 
@@ -30,6 +32,8 @@ export const TextAreaInput = (props: propTypes) => {
         placeholder={ props.placeholder }
         onChange={ onChange }
         value={ props.value || '' }
+        rows={ props.rows }
+        cols={ props.cols }
       />
       {renderErrors()}
     </div>
