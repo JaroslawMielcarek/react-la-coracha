@@ -230,7 +230,7 @@ const PlayersPayments = () => {
               <p className="column">{ p.memberID }</p>
               <p className="column">{ p.nick }</p>
               <p className="column gender">{ p.isFemale ? "Mujer" : "Hombre" }</p>
-              <p className="column">{ p.underAge ? "Sí" : "No" }</p>
+              <p className="column">{  !!p.underAge ? "Sí" : "No" }</p>
               <p className="column team">{ p.team }</p>
               <p className="column">{ p.balance }</p>
             </div>
