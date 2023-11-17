@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useError } from "utils/useErrors"
 import withForm from "../form/withForm"
+import { FormContext } from "components/form/useFormState"
 
 type propTypes = {
     placeholder: string,
@@ -98,12 +99,13 @@ export const TimeInput = (props: propTypesTime) => {
 }
 
 type propTypesDate = {
-  placeholder: string,
   name: string,
   value: string,
   label: string,
   errors: string[],
   onChange: Function,
+  min?: string,
+  max?: string
 }
 export const DatePickerInput = (props: propTypesDate) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,15 +138,51 @@ export const DatePickerInput = (props: propTypesDate) => {
         name={ props.name }
         type="date"
         className="form-control"
-        value={ props.value }
+        value={ props.value || Date.now().toLocaleString() }
         onChange={ onChange }
         onKeyDown={ handleKeyDown }
         onKeyDownCapture={ handleKeyDown }
+        min={ props.min }
+        max={ props.max }
       />
       { renderErrors() }
     </div>
   )
+}
+type DatePickerInputPropsType = {
+  name: string,
+  validators: Function[],
+  label?: string,
+  onChange?: Function,
+  children?: React.ReactNode,
+  min?: string,
+  max?: string
+}
+export const DatePickerInputForm  = (props: DatePickerInputPropsType) => {
+  const { formState, setFieldValue, registerInput } = useContext(FormContext)
+
+  useEffect(() => {
+    registerInput(props.name, props.validators)
+  }, [])
+
+  function onChange <T>(val: T) {
+    if (props.onChange) return props.onChange(props.name, val)
+    setFieldValue(props.name, val)
   }
+  const inputValue = formState.data[props.name]?.toString() || ""
+  const inputErrors = formState.errors[props.name] || []
+
+  return (
+    <DatePickerInput
+      {... props }
+      label={ props.label || "Elige la fecha"}
+      errors={inputErrors}
+      value={inputValue}
+      onChange={onChange}
+    />
+  )
+}
+
   type propTypesDatePicker = {
     name: string,
     value: Date[],
@@ -179,7 +217,7 @@ export const DatePickerInput = (props: propTypesDate) => {
         )): <p className="no-data">No hay ningua fecha prohibida</p>}
         </div>
         <fieldset className="solid fit form-group">
-          <DatePickerInput placeholder="24/01/2023" name="date" value={"yyyy-mm-dd"} label="Choose date" errors={ errors } onChange={(val: string) => onChange(val)}/>
+          <DatePickerInput name="date" value={"yyyy-mm-dd"} label="Choose date" errors={ errors } onChange={(val: string) => onChange(val)}/>
         </fieldset>
       </fieldset>
     )

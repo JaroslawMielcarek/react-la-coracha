@@ -1,6 +1,6 @@
 import "./Profile.css"
 import Form from "components/form/Form"
-import { TextInputForm } from "components/TextInput/TextInput"
+import { DatePickerInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { FormContext } from "components/form/useFormState"
 import { useFormState } from "components/form/useFormState"
 import { TickCustomValueForm } from "components/tickButton/TickButton"
@@ -13,7 +13,8 @@ import { isTheSame, prepareFormState, prepareToSend } from "utils/object"
 import { UserContext } from "utils/useUser"
 import { useFetch } from "utils/useFetch"
 import { getMonthNameFromMonthYear } from "utils/time"
-import { TMonthFinancial, TPropertyWithPermission } from "shared/types"
+import { TMonthFinancial, TPropertyWithPermission, TPayment } from "shared/types"
+import Modal from "components/modal/Modal"
 
 type TPlayer = {
   _id: string,
@@ -52,7 +53,7 @@ export default function Profile () {
       <section id="paymentsCalendar" className="card">
         <h3>Calendario de pagos</h3>
         { renderBalance() }
-        <PaymentCalendar payments={ userData?.payments }/>
+        <PaymentCalendar />
       </section>
       <section id="positionPreference" className="card">
         <PositionPreference player={ userData } sendData={ sendData }/>
@@ -63,14 +64,7 @@ export default function Profile () {
 
 const PositionPreference = ({player, sendData}: {player: TPlayer | undefined, sendData: Function }) => {
   const DEFAULT_POSITIONS = ["EXT","OP","CO","CE","LIB"]
-  const [ hasChanges, setHasChanges] = useState(false)
   const [state, setState] = useState<{choosen: string}[]>(player?.preferedPositions || [])
-
-
-  useEffect( () => {
-    const result = isTheSame(player?.preferedPositions, state)
-    result ? setHasChanges(false) : setHasChanges(true)
-  },[state, player])
 
   useEffect(() =>{
     if (player?.preferedPositions?.length) setState(player.preferedPositions)
@@ -117,48 +111,69 @@ const PositionPreference = ({player, sendData}: {player: TPlayer | undefined, se
       </li>
     ))
   }
-  return (
-    <>
-      <h3>Elija preferencia de posición</h3>
-      <p className="extra-message">Seleccione de mayor deseo a menor</p>
-      <ul>
-        {generateRow()}
-      </ul>
-      { hasChanges && (
-        <div className="buttons">
-          <button className="btn color" onClick={ () => handleSubmit() }>Guardar</button>
-          <button className="btn color red" onClick={ () => handleReset() }>Restablecer</button>
-        </div>
-      ) }
-    </>
-  )
+  const renderButtons = () => {
+    const result = isTheSame(player?.preferedPositions, state)
+    if (result) return null
+    return (
+      <div className="buttons">
+        <button className="btn color" onClick={ () => handleSubmit() }>Guardar</button>
+        <button className="btn color red" onClick={ () => handleReset() }>Restablecer</button>
+      </div>
+    )
+  }
+  return (<>
+    <h3>Elija preferencia de posición</h3>
+    <p className="extra-message">Seleccione de mayor deseo a menor</p>
+    <ul>
+      { generateRow() }
+    </ul>
+    { renderButtons() }
+  </>)
 }
 
 
-const PaymentCalendar = ({payments}: {payments: TMonthFinancial[] | undefined}) => {
+const PaymentCalendar = () => {
+  const [ payments, sendData ] = useFetch<TMonthFinancial[]>({url: "user/getOwnPayments", errorTitle:"Own Payments"})
   const currYear = new Date().getFullYear()
-  const [selectedYear, setSelectedYear] = useState<number>(currYear)
+  const [ selectedYear, setSelectedYear ] = useState<number>(currYear)
+  const [ selectedPayment, setSelectedPayment ] = useState<TPayment | null>(null)
 
+  const handleSendTransferConfirmation = async (data: TPayment) => {
+  const r = await sendData("user/setConfirmPayment", { payment: data })
+  if (r) setSelectedPayment(null)
+  }
   const renderCalendar = () => {
-    const yearPayments = payments?.filter(m => parseInt(m.monthYear.split("-")[0]) === selectedYear )
+    const yearPayments = Array.isArray(payments) ? payments.filter(m => parseInt(m.monthYear.split("-")[0]) === selectedYear ) : []
 
     if (!yearPayments || !yearPayments.length) return <p className="no-data">¡No hay historial de pagos en este período!</p>
   
-    return (
+    const Payment = ({payment}: {payment: TPayment}) => {
+      let klass = payment.isPaid !== "no" ? "payment paid" : payment.transferDate ? "payment waiting" : "payment"
+      const handleClick = () => {
+        return payment.isPaid === "no" ? setSelectedPayment(payment) : null
+      }
+      return (
+        <div className={ klass } onClick={ handleClick }>
+          <p className="type">{ payment.type[0].toUpperCase() + payment.type.slice(1) }:</p>
+          <p className="qty">{ payment.qty }</p>
+        </div>
+      )
+    }
+    return (<>
       <div className="payments">
         { yearPayments.map(m => (
           <div className="month" key={m.monthYear}>
             <h5 className="name">{ getMonthNameFromMonthYear(m.monthYear) }</h5>
-              { m.payments.map(payment => (
-                <div className={ payment.isPaid !== "no" ? "payment paid" : "payment" } key={ payment.type }>
-                  <p className="type">{ payment.type[0].toUpperCase() + payment.type.slice(1) }:</p>
-                  <p className="qty">{ payment.qty }</p>
-                </div>
-              )) }
+              { m.payments.map(payment => <Payment payment={ payment } key={ payment._id }/>) }
           </div>
         ) )}
       </div>
-    )
+      { yearPayments.length ? <div id="legend">
+        <p className="payment">No pagado</p>
+        <p className="payment waiting">Pagado - no confirmado por club</p>
+        <p className="payment paid">Pagado - confimado por club</p>
+      </div> : null }
+    </>)
   }
   const renderPrevButton = () => {
     if (selectedYear > currYear - 5) return <span className="prev year" onClick={ () => setSelectedYear(selectedYear - 1) }>&lt;</span>
@@ -174,8 +189,44 @@ const PaymentCalendar = ({payments}: {payments: TMonthFinancial[] | undefined}) 
         <h3 className="year">{ selectedYear }</h3>
         {renderNextButton()}
       </div>
+      <p className="extra-message">Por favor, confirme sus pagos haciendo clic en pago y proporcionando al menos la fecha de transferencia.</p>
       {renderCalendar()}
+      
+      { selectedPayment ? <Modal onClose={() => setSelectedPayment(null)}>
+        <Details p={ selectedPayment } handleSubmit={ handleSendTransferConfirmation } hideDetails={() => setSelectedPayment(null)}/>
+      </Modal> : null }
     </>
+  )
+}
+const Details = ({p, handleSubmit, hideDetails}: {p: TPayment, handleSubmit: Function, hideDetails: Function}) => {
+  const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState(p)
+
+  const renderButtons = () => {
+    const result = Object.entries(formState.data).every( ([key, value]) => isTheSame(value, p[key as keyof TPayment]) )
+    
+    if (!result) return <button type="submit" className="btn color">Provide</button>
+    return <button type="button" className="btn" onClick={() => hideDetails()}>Anular</button>
+  }
+  return (
+    <FormContext.Provider value={ { formState, validate, registerInput, setFieldValue, resetForm } }>
+      <Form 
+        id="paymentDetails"
+        className="paymentDetails"
+        onSubmit={() => handleSubmit(formState.data) } >
+      <h4>Confirma tu pago</h4>
+        <div className="form-group">
+          <p className="type">Tipo: <span>{ p.type.toLocaleUpperCase() }</span></p>
+          <p className="qty">Importe: <span>{ p.qty }</span></p>
+        </div>
+        <div>
+          <TextInputForm name="transferID" placeholder="0123456789" label="Referencia" validators={ [] } />
+          <DatePickerInputForm name="transferDate" label="Fecha en que hiciste la transferencia" max={ new Date().toISOString().split("T")[0] } validators={ [requiredValidator] } />
+        </div>
+        <div className="buttons">
+          { renderButtons() }
+        </div>
+      </Form>
+    </FormContext.Provider>
   )
 }
 

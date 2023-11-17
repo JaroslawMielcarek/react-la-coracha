@@ -43,7 +43,6 @@
 #paymentsCalendar .yearHeader .next { grid-column: 3;}
 
 
-
 #paymentsCalendar .balance .amount::before {
   content: "€";
   width: 1ch;
@@ -58,60 +57,73 @@
 #paymentsCalendar .payments {
   display: grid;
   grid-template-columns: repeat(2, 150px);
-  grid-column-gap: 4px;
-  grid-row-gap: 4px;
+  gap: 4px;
   margin: 0 auto;
 }
-#paymentsCalendar .payments .month {
+#paymentsCalendar .month {
   padding: 8px;
   border: 1px solid var(--blueMedium);
   border-radius: 4px;
   min-width: 140px;
   background-color: var(--white);
 }
-#paymentsCalendar .payments .month  .name {
+#paymentsCalendar .month  .name {
   text-align: center;
   margin: 0.1em 0 .3em;
 }
-#paymentsCalendar .payments .payment {
+#paymentsCalendar .payment {
   display: flex;
   align-items: baseline;
-  /* height: 1.5rem; */
+  margin: 8px 0;
+  cursor: pointer;
 }
-#paymentsCalendar .payments .payment  p {
-  margin: 0;
+#paymentsCalendar #legend .payment {
+  cursor: default;
+}
+#paymentsCalendar .payment.paid {
+  cursor: not-allowed;
 }
 
-#paymentsCalendar .payments .payment::before {
+#paymentsCalendar .payment::before {
   content: '\2717';
   width: 1ch;
   margin-right: 1ch;
   color: var(--dangerous);
 }
-#paymentsCalendar .payments .payment.paid::before {
+#paymentsCalendar .payment.paid::before {
   content: '\2713';
   color: var(--valid);
 }
-#paymentsCalendar .payments .payment.paid .type,
-#paymentsCalendar .payments .payment.paid .qty {
+#paymentsCalendar .payment.waiting::before {
+  content: '\21c6';
+  color: var(--valid);
+}
+#paymentsCalendar .payment.paid .type,
+#paymentsCalendar .payment.paid .qty {
   text-decoration: line-through;
 }
-#paymentsCalendar .payments .payment .qty::before {
+#paymentsCalendar .payment .qty::before {
   content: '€';
   width: 1ch;
   margin: 0 2px;
 }
-#paymentsCalendar .payments .payment .type,
-#paymentsCalendar .payments .payment  .qty {
+#paymentsCalendar .payment .type,
+#paymentsCalendar .payment .qty {
   display: inline-block;
 }
-#paymentsCalendar .payments .payment  .type {
+#paymentsCalendar .payment  .type {
   margin-right: 1ch;
 }
-#paymentsCalendar .payments .payment.qty::after{
+#paymentsCalendar .payment.qty::after{
   content: '€';
   width: 1ch;
 }
+#paymentDetails .type span,
+#paymentDetails .qty span {
+  color: var(--blueDark);
+  font-weight: bold;
+}
+
 
 @media (min-width: 600px) {
   #paymentsCalendar .payments {

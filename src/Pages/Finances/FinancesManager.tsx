@@ -16,6 +16,7 @@ import { SelectInput } from "components/selectInput/SelectInput"
 import { UserContext } from "utils/useUser"
 import { useNavigate } from "react-router-dom"
 import { TMonthFinancial, TPayment, TSponsor, TPlayer } from "shared/types"
+import { sortedByPropName } from "utils/sort"
 
 export const FinanceManager = () => {
   const { isLogged } = useContext(UserContext)
@@ -139,139 +140,111 @@ const PlayersFinanceDownloader = () => {
   )
 }
 
-type TPlayerWithPaymentsBalance = TPlayer & { balance: string, payments: TMonthFinancial[] }
+type TPlayerWithPaymentsBalance = TPlayer & { balance: string, payments: TMonthFinancial[], feeRedemption: boolean }
 
 
 type PaymentContextType = {
-  handleNewMonth: (monthYear: string) => void,
-  handleNewPayment: (monthYear: string, payment: TPayment) => void,
-  handleUpdatePayment: (payment: TPayment) => void,
-  handleRemovePayment: (payment: TPayment) => void,
+  selectedPlayer?: TPlayerWithPaymentsBalance,
+  sendData: (sendDataUrl: string, payload: any, headers?: { [key: string]: string;} | undefined) => Promise<boolean>
 }
 const PaymentContext = createContext<PaymentContextType>({
-  handleNewMonth: () => {},
-  handleNewPayment: () => {},
-  handleUpdatePayment: () => {},
-  handleRemovePayment: () => {},
+  selectedPlayer: undefined,
+  sendData: function send() { return Promise.resolve(true) }
 })
 
 const PlayersPayments = () => {
-  const [players, sendData] = useFetch<TPlayerWithPaymentsBalance[]>({ url: "admin/getAllUsersBalance", errorTitle: "Finance Manager"})
-  const [list, setList] = useState<TPlayerWithPaymentsBalance[]>(players || [])
-  const [selectedFilter, setSelectedFilter] = useState("Todos")
-  const [selectedPlayer, setSelectedPlayer] = useState<TPlayerWithPaymentsBalance | null>(null)
-  const [showNewMonth, setShowNewMonth] = useState(false)
+  const [ players, sendData ] = useFetch<TPlayerWithPaymentsBalance[]>({ url: "admin/getAllUsersBalance", errorTitle: "Finance Manager"})
+  const [ selectedFilter, setSelectedFilter ] = useState("Todos")
+  const [ selectedPlayer, setSelectedPlayer ] = useState<TPlayerWithPaymentsBalance | null>(null)
+  const [ sortBy, setSortBy ] = useState("memberID")
+  const [ showNewMonth, setShowNewMonth ] = useState(false)
 
-  useEffect(() => {
-    if (!players) return 
+  const filterAndSort = (list: TPlayerWithPaymentsBalance[] | undefined, sortBy: string) => {
+    if (!list) return []
 
-    if (selectedPlayer) {
-      const updatedPlayer = players?.find(p => p.memberID === selectedPlayer?.memberID)
-      if (updatedPlayer) setSelectedPlayer(updatedPlayer)
-    }
     switch(selectedFilter){
       case "Deudores": 
-        return setList(players.filter(p => parseFloat(p.balance) < 0 ))
+        return sortedByPropName(list.filter(p => parseFloat(p.balance) < 0 ), sortBy)
       case "Sobrepagos":
-        return setList(players.filter(p => parseFloat(p.balance) > 0))
+        return sortedByPropName(list.filter(p => parseFloat(p.balance) > 0), sortBy)
       default:
-        return setList(players)
+        return sortedByPropName(list, sortBy)
     }
-  },[selectedFilter, players])
-
-  const handleEdit = (player: TPlayerWithPaymentsBalance) => setSelectedPlayer(player)
+  }
+  useEffect(() => {
+    if (!selectedPlayer) return
+    const updatedPlayer = players?.find(p => p._id === selectedPlayer?._id )
+    updatedPlayer ? setSelectedPlayer(updatedPlayer) : setSelectedPlayer(null)
+  }, [players])
   
-  const handleSortSelection = (val: string) => {
-    const propName = val as keyof TPlayerWithPaymentsBalance
-    setList( [...list].sort( (a: TPlayerWithPaymentsBalance, b: TPlayerWithPaymentsBalance) => {
-      const valA = a[propName] ? a[propName] : '0'
-      const valB = b[propName] ? b[propName] : '0'
-      if (!valA || !valB) return -1
-      return valA.toString().localeCompare(valB.toString(),'en', { numeric: (val === "name" || val ==="gender") ? false : true } )
-    }) )
-  }
-  const handleNewMonth = (monthYear: string) => {
-    if (selectedPlayer) sendData("admin/createUserFinancialMonth", { memberID: selectedPlayer.memberID, monthYear: monthYear })
-  }
-  const handleNewPayment = (monthID: string, payment: TPayment) => {
-    const { type, qty, isPaid } = payment
-    if (selectedPlayer) sendData("admin/createUserPayment", { memberID: selectedPlayer.memberID, month: { _id: monthID }, payment: { type: type, qty: qty, isPaid: isPaid }})
-  }
-  const handleUpdatePayment = (payment: TPayment) => {
-    if (selectedPlayer) sendData("admin/updateUserPayment", { memberID: selectedPlayer.memberID, payment: payment })
-  }
-  const handleRemovePayment = (payment: TPayment) => {
-    if (selectedPlayer) sendData("admin/deleteUserPayment", { memberID: selectedPlayer.memberID, payment: payment })
-  }
-  const handleFilterSelection = (val: string) => {
-    if (val) setSelectedFilter(val)
+  const handleSetFeeRedemption = async (feeRedemption: boolean) => {
+    await sendData("admin/setUserFeeRedemption", { memberID: selectedPlayer?.memberID, feeRedemption: feeRedemption })
   }
 
-  return (
-    <>
-      <h3>Jugadores</h3>
-      <Table id="financesManager">
-        <SelectInput name="sortBy" label="Mostrar" value={ selectedFilter } onChange={ handleFilterSelection } options={["Todos","Deudores", "Sobrepagos"]}/>
-        <div className="table-head">
-          <p className="column"></p>
-          <p className="column sort" onClick={() => handleSortSelection("memberID") }>ID</p>
-          <p className="column sort" onClick={() => handleSortSelection("name") }>Nick</p>
-          <p className="column gender">Género</p>
-          <p className="column sort" onClick={() => handleSortSelection("underAge") }>Menor</p>
-          <p className="column team sort" onClick={() => handleSortSelection("team") }>Equipo</p>
-          <p className="column sort" onClick={() => handleSortSelection("balance") }>€ Balance</p>
-        </div>
-        <div className="table-body">
-          { list.map( (p, index) => (
-            <div className="table-row" key={ p.memberID }>
-              <div className="action column">
-                <button className="btn color" onClick={ () => handleEdit(p) }>Editar</button>
-              </div>
-              <p className="column">{ p.memberID }</p>
-              <p className="column">{ p.nick }</p>
-              <p className="column gender">{ p.isFemale ? "Mujer" : "Hombre" }</p>
-              <p className="column">{  !!p.underAge ? "Sí" : "No" }</p>
-              <p className="column team">{ p.team }</p>
-              <p className="column">{ p.balance }</p>
+  return (<>
+    <h3>Jugadores</h3>
+    <Table id="financesManager">
+      <SelectInput name="sortBy" label="Mostrar" value={ selectedFilter } onChange={(val: string) => setSelectedFilter(val) } options={["Todos","Deudores", "Sobrepagos"]}/>
+      <div className="table-head">
+        <p className="column"></p>
+        <p className="column sort" onClick={() => setSortBy("memberID") }>ID</p>
+        <p className="column sort" onClick={() => setSortBy("nick") }>Nick</p>
+        <p className="column gender">Género</p>
+        <p className="column sort" onClick={() => setSortBy("underAge") }>Menor</p>
+        <p className="column team sort" onClick={() => setSortBy("team") }>Equipo</p>
+        <p className="column sort" onClick={() => setSortBy("feeRedemption") }>Redencion</p>
+        <p className="column sort" onClick={() => setSortBy("balance") }>€ Balance</p>
+      </div>
+      <div className="table-body">
+        { filterAndSort(players, sortBy).map( (p, index) => (
+          <div className="table-row" key={ p.memberID }>
+            <button className="action column btn color" onClick={ () => setSelectedPlayer(p) }>Editar</button>
+            <p className="column">{ p.memberID }</p>
+            <p className="column">{ p.nick }</p>
+            <p className="column gender">{ p.isFemale ? "Mujer" : "Hombre" }</p>
+            <p className="column">{  !!p.underAge ? "Sí" : "No" }</p>
+            <p className="column team">{ p.team }</p>
+            <p className="column">{  !!p.feeRedemption ? "Sí" : "No" }</p>
+            <p className="column">{ p.balance }</p>
+          </div>
+        )) }
+      </div>
+    </Table>
+    { selectedPlayer ?
+        <PaymentContext.Provider value={ {sendData, selectedPlayer} }>
+          <Modal onClose={() => setSelectedPlayer(null) }>
+          <div id="paymentsDetails">
+            <h5>Miembro: { selectedPlayer.memberID } {selectedPlayer.nick ? `(${selectedPlayer.nick})` : null}</h5>
+            <div id="options">
+              <TickButton label="Redención de cuota de miembro" value={ selectedPlayer.feeRedemption } onChange={(val: boolean) => handleSetFeeRedemption(val)} className="" />
+              { showNewMonth 
+                ? <NewMonthPicker setShowNewMonth={ setShowNewMonth }/>
+                : <button className="btn" onClick={ () => setShowNewMonth(true) }>Nuevo mes</button> }
             </div>
-          )) }
-        </div>
-      </Table>
-      { selectedPlayer && 
-          <PaymentContext.Provider value={ { handleNewMonth, handleNewPayment, handleUpdatePayment, handleRemovePayment } }>
-            <Modal onClose={() => setSelectedPlayer(null) }>
-              <div id="paymentsDetails">
-                <h5>Miembro: { selectedPlayer.memberID }</h5>
-                { showNewMonth 
-                  ? <NewMonthPicker setShowNewMonth={ setShowNewMonth }/>
-                  : <button className="btn color addMonth" onClick={ () => setShowNewMonth(true) }>Nuevo mes</button> }
-                <ul className="months">
-                  { selectedPlayer.payments && selectedPlayer.payments.map( m => <Month month={ m } key={ m._id } />) }
-                </ul>
-              </div>
-            </Modal>
-          </PaymentContext.Provider> 
-      }
-    </>
-  )
+            <MonthScroll months={ sortedByPropName(selectedPlayer.payments, "monthYear", true) } />
+          </div>
+          </Modal>
+        </PaymentContext.Provider> 
+      : null }
+  </>)
 }
 const NewMonthPicker = ({ setShowNewMonth }: {setShowNewMonth: Function }) => {
   const [monthYear, setMonthYear] = useState('')
   const regex = new RegExp(/^(20\d{2}|0(?!0)\d|[1-9]\d)-(1[0-2]|0[1-9])$/)
-  const { handleNewMonth } = useContext(PaymentContext)
+  const { sendData, selectedPlayer } = useContext(PaymentContext)
   const currentMonth = new Date().getMonth() + 1
   const currentYearMonth = ( new Date().getFullYear() ) + "-" + ( currentMonth < 10 ? `0${currentMonth}` : currentMonth )
   
-  const handleAddNewMonth = (monthYear: string) => {
+  const handleNewMonth = async (monthYear: string) => {
+    await sendData("admin/createUserFinancialMonth", { memberID: selectedPlayer?.memberID, monthYear: monthYear })
     setShowNewMonth(false)
-    handleNewMonth(monthYear)
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setMonthYear(e.target.value)
   
   const renderButton = () => {
     return (!regex.test(monthYear)) 
       ? <button className="btn" onClick={ () => setShowNewMonth(false) } >Anular</button>
-      : <button className="btn color" onClick={ () => handleAddNewMonth(monthYear) } >Agregar</button>
+      : <button className="btn color" onClick={ () => handleNewMonth(monthYear) } >Agregar</button>
   }
   return (
     <div className="month">
@@ -281,80 +254,94 @@ const NewMonthPicker = ({ setShowNewMonth }: {setShowNewMonth: Function }) => {
   )
 }
 
-const Month = ({month}: {month: TMonthFinancial}) => {
-  const [showNewPayment, setShowNewPayment] = useState(false)
-
+const MonthScroll = ({months}: {months: TMonthFinancial[]}) => {
+  const [ monthIndex, setMonthIndex ] = useState(0)
+  const { sendData, selectedPlayer } = useContext(PaymentContext)
+  
+  const handleNewPayment = async (monthID: string, payment: TPayment) => {
+    const { type, qty, isPaid } = payment
+    await sendData("admin/createUserPayment", { memberID: selectedPlayer?.memberID, month: { _id: monthID }, payment: { type: type, qty: qty, isPaid: isPaid }})
+  }
+  const renderPrevButton = () => {
+    if (monthIndex > 0) return <span className="prev year" onClick={ () => setMonthIndex(state => state - 1) }>&lt;</span>
+  }
+  const renderNextButton = () => {
+    if (monthIndex < months.length - 1) return <span className="next year" onClick={ () =>  setMonthIndex(state => state + 1) }>&gt;</span>
+  }
   return (
-    <li className="month">
-      <p className="date">{ month.monthYear }</p>
-      <ul className="payments">
-        { month.payments.map( p => <Payment p={ p } key={ p._id }/> ) }
-        { showNewPayment && 
-            <Payment 
-              p={ { type: "otros", qty: 0 , isPaid: "no" } }
-              monthID={ month._id }
-              hideNewPayment = { setShowNewPayment }
-            />
-        }
-      </ul>
-      { !showNewPayment && <button className="btn full-width" onClick={() => setShowNewPayment(true) }>Agregar Nuevo Pago</button> }
-    </li>
+    <div>
+      <div id="monthHeader">
+        {renderPrevButton()}
+        <h3 className="year">{ months[monthIndex].monthYear }</h3>
+        {renderNextButton()}
+      </div>
+      <div className="month">
+        <div id="payments">
+          { months[monthIndex].payments.map( payment => <Payment payment={ payment }  key={ payment._id }/> ) }
+        <button className="btn full-width" onClick={() => handleNewPayment(months[monthIndex]._id, {type: "afiliación", qty: 0, isPaid: "no"}) }>Agregar Nuevo Pago</button>
+        </div>
+      </div>
+    </div>
   )
 }
 
-const Payment = ({p, monthID, hideNewPayment}: {p: TPayment, monthID?: string, hideNewPayment?: Function}) => {
-  const { handleNewPayment, handleUpdatePayment, handleRemovePayment } = useContext(PaymentContext)
-  const [isEditing, setIsEditing] = useState(monthID ? true : false)
-  const [hasChanges, setHasChanges] = useState(false)
-  const [payment, setPayment] = useState(p)
-  
-  useEffect( () => {
-    const result = Object.entries(payment).every( ([key, value]) => isTheSame(value, p[key as keyof TPayment]) )
-    result ? setHasChanges(false) : setHasChanges(true)
-  },[payment, p])
+const Payment = ({payment}: {payment: TPayment}) => {
+  const [ editing, setEditing ] = useState<TPayment | null>(null)
+  const { sendData, selectedPlayer } = useContext(PaymentContext)
 
-  const handleSubmitClick = () => {
-    setIsEditing(false)
-    if (monthID && hideNewPayment) {
-      hideNewPayment(false)
-      return handleNewPayment(monthID, payment)
-    }
-    return handleUpdatePayment(payment)
+  const handleUpdatePayment = async () => {
+    if (!editing) return null
+    await sendData("admin/updateUserPayment", { memberID: selectedPlayer?.memberID, payment: editing })
+    setEditing(null)
   }
-  const handleRemoveClick = () => handleRemovePayment(payment)
+  const handleRemovePayment = async () => {
+    await sendData("admin/deleteUserPayment", { memberID: selectedPlayer?.memberID, payment: payment })
+  }
 
-  const handleSelectChange = (propName: string, val: string) => setPayment(state => ({ ...state, [propName]: val }))
+  const handleSelectChange = (propName: string, val: string) => editing ? setEditing({ ...editing, [propName]: val }) : null
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
     const propName = e.target.name
     const num = parseInt(val)
-    if (isNaN(num)) return
-    setPayment(state => ({ ...state, [propName]: num }))
+    if (isNaN(num) || !propName ) return null
+    if (editing) setEditing({ ...editing, [propName]: num })
   }
 
-  const klass = monthID ? "new payment" : "payment"
-  if (!isEditing) {
-    return (
-      <li className={ klass }>
-        <button className="btn color" onClick={() => setIsEditing(true)}>Editar</button>
-        <span>{ payment.type}</span>
-        <span className="qty">{ payment.qty }</span>
-        <span>{ payment.isPaid}</span>
-        <button className="btn color red" onClick={ () => handleRemoveClick() }>x</button> 
-      </li>
-    )
+  const renderButtons = () => {
+    if (!editing) return <button className="btn color" onClick={() => setEditing(payment)}>Editar</button> 
+    const result = Object.entries(editing).every( ([key, value]) => isTheSame(value, payment[key as keyof TPayment]) )
+    if (result) return <button className="btn" onClick={() => setEditing(null)}>Anular</button>
+    return <button className="btn color" onClick={() => handleUpdatePayment()}>Guardar</button>
+  }
+  const renderEditable = () => {
+    if (editing) return (<>
+      <SelectInput name="type" label="Tipo de pago" value={ editing.type } options={ ["afiliación", "equipación", "licencia", "otros"] } onChange={ (val: string) => handleSelectChange("type", val) } /> 
+      <div className="form-group">
+        <label>Importe</label>
+        <input type="number" min={ 0 } max={ 9999 } className="qty" name="qty" placeholder="cantidad" value={ editing.qty } pattern="^\d{4}$" onChange={ handleInputChange }/>
+      </div>
+      <SelectInput name="isPaid" label="Pagado" value={ editing.isPaid } options={ ["no", "efectivo", "transferencia"] } onChange={ (val: string) => handleSelectChange("isPaid", val) } />
+      <button className="btn color red" onClick={() => setEditing(payment)}>Prev</button>
+    </>)
+    return (<>
+      <span>{ payment.type }</span>
+      <span className="qty">{ payment.qty }</span>
+      <span>{ payment.isPaid }</span>
+      <button className="btn color red" onClick={() => handleRemovePayment()}>x</button>
+    </>)
   }
   return (
-    <li className={ klass }>
-      { hasChanges 
-          ? <button className="btn color" onClick={ () => handleSubmitClick() }>Guardar</button>
-          : <button className="btn" onClick={() => { hideNewPayment ? hideNewPayment(false) : setIsEditing(false) } }>Anular</button>
-      }
-      <SelectInput name="type" label="Tipo de pago" value={ payment.type } options={ ["afiliación", "equipación", "licencia", "otros"] } onChange={ (val: string) => handleSelectChange("type", val) } />
-      <input type="number" min={ 0 } max={ 9999 } className="qty" name="qty" placeholder="cantidad" value={ payment.qty } pattern="^\d{4}$" onChange={ handleInputChange }/>
-      <SelectInput name="isPaid" label="Forma de pago" value={ payment.isPaid } options={ ["no", "efectivo", "transferencia"] } onChange={ (val: string) => handleSelectChange("isPaid", val) } />
-      { hasChanges && <button className="btn color red" onClick={ () => setPayment(p)}>Prev</button> }
-    </li>
+    <div className="payment">
+      <div className="editable">
+        { renderButtons() }
+        { renderEditable() }
+      </div>
+      <div className="userReading extra-message">
+        <span>Información de pago:</span>
+        <span>{ payment.transferDate }</span>
+        <span>{ payment.transferID }</span>
+      </div>
+    </div>
   )
 }
 
