@@ -171,6 +171,8 @@ export type TPayment = {
   type: string,
   qty: number,
   isPaid: string,
+  transferDate?: string | null,
+  transferID?: string,
 }
 
 
