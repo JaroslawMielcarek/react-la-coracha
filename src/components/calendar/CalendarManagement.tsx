@@ -1,6 +1,6 @@
 import "./CalendarManagement.css"
 import { useState } from "react"
-import { checkRangeValidator, requiredValidator } from "utils/validators"
+import { requiredValidator } from "utils/validators"
 import { getMonthNameByNumber } from "utils/time"
 import { getFilteredByTimePeriod, isTheSame, prepareFormState, prepareToSend } from "utils/object"
 import { useFetch } from "utils/useFetch"
@@ -8,7 +8,7 @@ import Modal from "components/modal/Modal"
 import Form from "components/form/Form"
 import { Table } from "components/table/Table"
 import { SelectInput, SelectInputForm } from "components/selectInput/SelectInput"
-import { TextInputForm } from "components/TextInput/TextInput"
+import { DateInputForm, NumberInputForm, TextInputForm, TimeInputForm } from "components/TextInput/TextInput"
 import { FormContext, useFormState } from "components/form/useFormState"
 import { TMatch } from "shared/types"
 
@@ -133,24 +133,24 @@ const Details = ({m, sendData, hideDetails}: DetailsPropsType) => {
         <div className="flex-group">
           <fieldset className="form-group dashed">
             <legend>Local</legend>
-            <TextInputForm name="homeTeam-clubName" label="Nombre del club" validators={ [requiredValidator] }/>
-            <TextInputForm name="homeTeam-teamName" label="Nombre del equipo" validators={ [requiredValidator] }/>
+            <TextInputForm name="homeTeam-clubName" placeholder="La Coracha" label="Nombre del club" validators={ [requiredValidator] }/>
+            <TextInputForm name="homeTeam-teamName" placeholder="La Coracha" label="Nombre del equipo" validators={ [requiredValidator] }/>
             <SelectInputForm name="homeTeam-teamGender" label="Género" validators={ [requiredValidator] } options={["Female", "Male", "Mix"]}/>
-            <TextInputForm name="homeTeam-wonSets" label="Sets ganados" type="number" validators={ [checkRangeValidator(0, 4, false)] }/>
+            <NumberInputForm name="homeTeam-wonSets" placeholder="0" label="Sets ganados" min={ 0 } max={ 3 } validators={ [] }/>
           </fieldset>
           <fieldset className="form-group dashed">
             <legend>Visitor</legend>
-            <TextInputForm name="guestTeam-clubName" label="Nombre del club" validators={ [requiredValidator] }/>
-            <TextInputForm name="guestTeam-teamName" label="Nombre del equipo" validators={ [requiredValidator] }/>
+            <TextInputForm name="guestTeam-clubName" placeholder="La Coracha" label="Nombre del club" validators={ [requiredValidator] }/>
+            <TextInputForm name="guestTeam-teamName" placeholder="La Coracha" label="Nombre del equipo" validators={ [requiredValidator] }/>
             <SelectInputForm name="guestTeam-teamGender" label="Género" validators={ [requiredValidator] } options={["Female", "Male", "Mix"]}/>
-            <TextInputForm name="guestTeam-wonSets" label="Sets ganados" type="number" validators={ [checkRangeValidator(0, 4, false)] }/>
+            <NumberInputForm name="guestTeam-wonSets" placeholder="0" label="Sets ganados" min={ 0 } max={ 3 } validators={ [] }/>
           </fieldset>
         </div>
         <fieldset className="form-group">
-          <TextInputForm name="dateTime-date" type="date" label="Fecha" validators={ [requiredValidator]}/>
-          <TextInputForm name="dateTime-time" type="time" label="Hora" validators={ [requiredValidator]}/>
-          <TextInputForm name="location" label="Ubicatión" validators={ [requiredValidator] }/>
-          <TextInputForm name="league" label="Liga" validators={ [] }/>
+          <DateInputForm name="dateTime-date" placeholder={ new Date().toISOString().split("T")[0] } label="Fecha" validators={ [requiredValidator]} />
+          <TimeInputForm name="dateTime-time" placeholder={ new Date().getHours() + ":" + new Date().getMinutes() } label="Hora" validators={ [requiredValidator]} />
+          <TextInputForm name="location" placeholder="Campanillas" label="Ubicatión" validators={ [requiredValidator] }/>
+          <TextInputForm name="league" placeholder="AFADE" label="Liga" validators={ [] }/>
         </fieldset>
         <div className="buttons">
           { renderButtons() }

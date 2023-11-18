@@ -5,8 +5,8 @@ import { useState } from "react"
 import Modal from "components/modal/Modal"
 import { FormContext, useFormState } from "components/form/useFormState"
 import Form from "components/form/Form"
-import { TextInputForm } from "components/TextInput/TextInput"
-import { checkRangeValidator, requiredValidator } from "utils/validators"
+import { NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
+import { requiredValidator } from "utils/validators"
 import { TickButtonForm } from "components/tickButton/TickButton"
 import { FileUploadWithForm, ImagePreviewWithForm } from "components/imageUploadWithPreview/ImageUpload"
 import { isTheSame, prepareFormState, prepareToSend } from "utils/object"
@@ -89,10 +89,12 @@ const PlayerDetails = ({p, sendData, hideDetails}: {p: TPlayer, sendData: Functi
       onSubmit={ () => handleSubmit() }
       >
         <div>
-          <TextInputForm 
+          <NumberInputForm 
             name="memberID"
             label="MemberID"
             placeholder="123"
+            min={ 100 }
+            max={ 9999 }
             validators={ [requiredValidator] }
             />
           <TickButtonForm
@@ -106,27 +108,31 @@ const PlayerDetails = ({p, sendData, hideDetails}: {p: TPlayer, sendData: Functi
             placeholder="john"
             validators={ [] }
             />
-          <TextInputForm
+          <NumberInputForm
             name="number"
             label="Dorsal"
             placeholder="13"
-            type="number"
-            validators={ [checkRangeValidator( 1, 99, false )] }
-            />
-            <TextInputForm
+            min={ 1 }
+            max={ 99 }
+            validators={ [] }
+          />
+          <NumberInputForm
             name="height"
             label="Altura (m)"
             placeholder="1.80"
-            type="number"
-            validators={ [checkRangeValidator( 1.5, 2.2, true )]}
-            />
-            <TextInputForm
+            min={ 1.5 }
+            max={ 2.2 }
+            step={ 0.1 }
+            validators={ [] }
+          />
+          <NumberInputForm
             name="weight"
             label="Peso (kg)"
             placeholder="65"
-            type="number"
-            validators={ [checkRangeValidator( 30, 130, false )] }
-            />
+            min={ 30 }
+            max={ 130 }
+            validators={ [] }
+          />
           <TickButtonForm
             name="isFemale"
             label="Mujer"

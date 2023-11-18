@@ -10,6 +10,12 @@ export function compareHoursMinutesStrings( val1, val2 ) {
 
   return time1 < time2 ? -1 : time1 > time2 ? 1 : 0
 }
+export function compareDateStrings( val1, val2 ) {
+  const date1 = Date.parse( val1 )
+  const date2 = Date.parse( val2 )
+
+  return date1 < date2 ? -1 : date1 > date2 ? 1 : 0
+}
 
 export function generateHoursArray (hour, maxHour, slot) {
   const arr = []

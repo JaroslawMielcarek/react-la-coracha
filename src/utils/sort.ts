@@ -15,7 +15,7 @@ export  function sortEnrollCategoryListByMaxAge<T extends IGender>(list: T[]){
 
 export function sortedByPropName<T>(list: T[], val: string, desc = false): T[] {
   const propName = val as keyof T
-  if (!list) return []
+  if (!list || !list.length) return []
   return [...list].sort( (a, b) => {
     const valA = a[propName]
     const valB = b[propName]

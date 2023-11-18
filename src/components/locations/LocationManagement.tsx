@@ -1,5 +1,5 @@
 import "./LocationManagement.css"
-import { DatePickerInput, TextInput, TextInputForm } from "components/TextInput/TextInput"
+import { TextInputForm } from "components/TextInput/TextInput"
 import Form from "components/form/Form"
 import { FormContext, useFormState } from "components/form/useFormState"
 import { CourtsInputForm } from "components/slot/Court"
@@ -122,8 +122,8 @@ const Details = ({location, add, hideDetails}: {location: TLocation, add: Functi
           className=""
           onSubmit={() => onSubmit() }
           onReset={() => resetForm() }>
-          <TextInputForm name="name" label="Nombre"  validators={ [requiredValidator] }/>
-          <TextInputForm name="address" label="Ubication" validators={ [requiredValidator] } />
+          <TextInputForm name="name" placeholder="IES Campanillas" label="Nombre"  validators={ [requiredValidator] }/>
+          <TextInputForm name="address" placeholder="Campanillas" label="Ubication" validators={ [requiredValidator] } />
           <CourtsInputForm name="courts" label="Pistas" validators={ [] }/>
           <div className="buttons">
             { renderButtons() }

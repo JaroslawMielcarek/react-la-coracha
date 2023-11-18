@@ -42,6 +42,7 @@ export default function Reset () {
         <h4 className='title'>Restablecer la contraseña</h4>
          <TextInputForm
           name="password"
+          placeholder="********"
           label="Nueva contraseña"
           type="password"
           validators={[requiredValidator, passwordValidator]}
@@ -49,6 +50,7 @@ export default function Reset () {
         />
         <TextInputForm
           name="password_confirmation"
+          placeholder="********"
           label="Confirmar nueva contraseña"
           type="password"
           validators={[requiredValidator, passwordValidator]}

@@ -7,7 +7,7 @@ import { TickButton } from "components/tickButton/TickButton"
 import { isTheSame, prepareFormState, prepareToSend } from "utils/object"
 import { FormContext, useFormState } from "components/form/useFormState"
 import Form from "components/form/Form"
-import { TextInputForm } from "components/TextInput/TextInput"
+import { DateInputForm, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { checkRangeValidator, requiredValidator } from "utils/validators"
 import { UserContext } from "utils/useUser"
 import { sortEnrollCategoryListByMaxAge, sortedByPropName } from "utils/sort"
@@ -78,9 +78,9 @@ const CategoryDetails = ({c, hideDetails}: {c: TEnrollCategory, hideDetails: Fun
   const renderGender = (gender: 'female' | 'male') => {
     return (
       <>
-        <TextInputForm name={ `${gender}-maxPlaces`} label="No. de limite" type="number" validators={ [requiredValidator, checkRangeValidator(1, 30, false)] }/>
-        <TextInputForm name={ `${gender}-minAge`} label="Edad minima" type="number" validators={ [requiredValidator, checkRangeValidator(1, 70, false)] }/>
-        <TextInputForm name={ `${gender}-maxAge`} label="Edad maxima" type="number" validators={ [requiredValidator, checkRangeValidator(1, 70, false)] }/>
+        <NumberInputForm name={ `${gender}-maxPlaces`} placeholder="1" label="No. de limite" min={ 1 } max={ 30 } validators={ [requiredValidator] }/>
+        <NumberInputForm name={ `${gender}-minAge`} placeholder="1" label="Edad minima" min={ 1 } max={ 70 } validators={ [requiredValidator] }/>
+        <NumberInputForm name={ `${gender}-maxAge`} placeholder="1" label="Edad maxima" min={ 1 } max={ 70 } validators={ [requiredValidator] }/>
       </>
       )
   }
@@ -99,8 +99,8 @@ const CategoryDetails = ({c, hideDetails}: {c: TEnrollCategory, hideDetails: Fun
         onReset={() => {}}
       >
         <div>
-          <TextInputForm name="name" label="Nombre" validators={ [requiredValidator] } />
-          <TextInputForm name="deadline" type="date" label="Deadline" validators={ [requiredValidator] }/>
+          <TextInputForm name="name" placeholder="Cadete" label="Nombre" validators={ [requiredValidator] } />
+          <DateInputForm name="deadline" placeholder={ new Date().toDateString() } label="Deadline" validators={ [requiredValidator] }/>
           { renderButton()}
           { !c._id && 
             <fieldset className="remove dashed">
