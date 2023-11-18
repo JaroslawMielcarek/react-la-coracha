@@ -4,8 +4,8 @@ import { Table } from "components/table/Table"
 import Modal from "components/modal/Modal"
 import Form from "components/form/Form"
 import { FormContext, useFormState } from "components/form/useFormState"
-import { TextInputForm } from "components/TextInput/TextInput"
-import { checkRangeValidator, requiredValidator } from "utils/validators"
+import { DateInputForm, NumberInputForm, TextInputForm, TimeInputForm } from "components/TextInput/TextInput"
+import { requiredValidator } from "utils/validators"
 import { useFetch } from "utils/useFetch"
 import { getByTimeRange, isTheSame, prepareFormState, prepareToSend } from "utils/object"
 import { getDayOfWeek } from "utils/time"
@@ -155,10 +155,10 @@ const Details = ({initVal, sendData, hideDetails}: {initVal: TPractice, sendData
       onSubmit={() => handleSubmit() }
       onReset={() => handleResetForm() }>
       <h4>Detalles de la quedada</h4>
-      <TextInputForm name="dateTime-date" type="date" label="Fecha" validators={ [requiredValidator]}/>
-      <TextInputForm name="dateTime-time" type="time" label="Hora" validators={ [requiredValidator]}/>
-      <TextInputForm name="location" label="Ubication" type="text" validators={ [requiredValidator] }/>
-      <TextInputForm name="playersLimit" label="Limite de Jugadores" type="number" validators={ [requiredValidator, checkRangeValidator(6, 24, false)] }/>
+      <DateInputForm name="dateTime-date" placeholder={ new Date().toDateString() } label="Fecha" validators={ [requiredValidator]}/>
+      <TimeInputForm name="dateTime-time" placeholder={ new Date().getHours() + ":" + new Date().getMinutes() } label="Hora" validators={ [requiredValidator]}/>
+      <TextInputForm name="location" placeholder="Campanillas" label="Ubication" validators={ [requiredValidator] }/>
+      <NumberInputForm name="playersLimit" placeholder="16" label="Limite de Jugadores" min={ 6 } max={ 24 } validators={ [requiredValidator] } />
       <fieldset className="dashed">
         <legend>Jugadores - disponibles</legend>
         <p className="extra-message">Toggle para agregar a la práctica</p>

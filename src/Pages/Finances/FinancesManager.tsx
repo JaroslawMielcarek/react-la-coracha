@@ -3,14 +3,14 @@ import "./FinancesManager.css"
 import { useState, useContext, useEffect, createContext } from "react"
 import { useFetch } from "utils/useFetch"
 import { compareYearMonth } from "utils/time"
-import { checkRangeValidator, requiredValidator } from "utils/validators"
+import { requiredValidator } from "utils/validators"
 import { isTheSame } from "utils/object"
 import * as XLSX from 'xlsx'
 import Modal from "components/modal/Modal"
 import Form from "components/form/Form"
 import { FormContext, useFormState } from "components/form/useFormState"
 import { FileUploadWithForm, ImagePreviewWithForm } from "components/imageUploadWithPreview/ImageUpload"
-import { TextInput, TextInputForm } from "components/TextInput/TextInput"
+import { NumberInput, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { TickButton, TickButtonForm } from "components/tickButton/TickButton"
 import { SelectInput } from "components/selectInput/SelectInput"
 import { UserContext } from "utils/useUser"
@@ -272,12 +272,12 @@ const MonthScroll = ({months}: {months: TMonthFinancial[]}) => {
     <div>
       <div id="monthHeader">
         {renderPrevButton()}
-        <h3 className="year">{ months[monthIndex].monthYear }</h3>
+        <h3 className="year">{ months[monthIndex] ? months[monthIndex].monthYear : null }</h3>
         {renderNextButton()}
       </div>
       <div className="month">
         <div id="payments">
-          { months[monthIndex].payments.map( payment => <Payment payment={ payment }  key={ payment._id }/> ) }
+          { months[monthIndex] ? months[monthIndex].payments.map( payment => <Payment payment={ payment }  key={ payment._id }/> ) : null }
         <button className="btn full-width" onClick={() => handleNewPayment(months[monthIndex]._id, {type: "afiliación", qty: 0, isPaid: "no"}) }>Agregar Nuevo Pago</button>
         </div>
       </div>
@@ -299,14 +299,18 @@ const Payment = ({payment}: {payment: TPayment}) => {
   }
 
   const handleSelectChange = (propName: string, val: string) => editing ? setEditing({ ...editing, [propName]: val }) : null
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    const propName = e.target.name
-    const num = parseInt(val)
-    if (isNaN(num) || !propName ) return null
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const val = e.target.value
+  //   const propName = e.target.name
+  //   const num = parseInt(val)
+  //   if (isNaN(num) || !propName ) return null
+  //   if (editing) setEditing({ ...editing, [propName]: num })
+  // }
+
+  const handleInputChange = (val: string, propName: string) => {
+    const num = !val ? val : parseInt(val)
     if (editing) setEditing({ ...editing, [propName]: num })
   }
-
   const renderButtons = () => {
     if (!editing) return <button className="btn color" onClick={() => setEditing(payment)}>Editar</button> 
     const result = Object.entries(editing).every( ([key, value]) => isTheSame(value, payment[key as keyof TPayment]) )
@@ -316,10 +320,7 @@ const Payment = ({payment}: {payment: TPayment}) => {
   const renderEditable = () => {
     if (editing) return (<>
       <SelectInput name="type" label="Tipo de pago" value={ editing.type } options={ ["afiliación", "equipación", "licencia", "otros"] } onChange={ (val: string) => handleSelectChange("type", val) } /> 
-      <div className="form-group">
-        <label>Importe</label>
-        <input type="number" min={ 0 } max={ 9999 } className="qty" name="qty" placeholder="cantidad" value={ editing.qty } pattern="^\d{4}$" onChange={ handleInputChange }/>
-      </div>
+      <NumberInput name="qty" placeholder="0" label="Importe" value={ editing.qty.toString() } min={ 0 } max={ 9999 } errors={ [] } onChange={(val: string) => handleInputChange(val, "qty")} />
       <SelectInput name="isPaid" label="Pagado" value={ editing.isPaid } options={ ["no", "efectivo", "transferencia"] } onChange={ (val: string) => handleSelectChange("isPaid", val) } />
       <button className="btn color red" onClick={() => setEditing(payment)}>Prev</button>
     </>)
@@ -372,13 +373,11 @@ const AddMembershipFeeToTeamMembers = () => {
   return (
     <fieldset className="dashed fit" id="manualMembershipFee">
       <legend className="extra-message">Añadir mensualidad a todos los miembros con equipo</legend>
-      <TextInput 
+      <NumberInput 
         name="menusalidad"
-        type="number"
-        label=""
-        placeholder="30"
         value={ membershipFee.toString() }
         onChange={(val: number) => setMembershipFee(val)}
+        placeholder="30"
         errors={[]}
       />
       <button className="btn color" onClick={() => handleAddMensualidadToTeamMembers()}>Añadir mensualidad</button>
@@ -512,15 +511,15 @@ const Details = ({s, hideNewSponsor}: {s: TSponsor, hideNewSponsor: Function}) =
         name="name"
         label="Nombre"
         placeholder="AlgoNuevo"
-        type="text"
         validators={ [requiredValidator] }
       />
-      <TextInputForm
+      <NumberInputForm
         name="contribution"
         label="Contribution"
         placeholder="300"
-        type="number"
-        validators={ [checkRangeValidator( 1, 9999, false )] }
+        min={ 1 }
+        max={ 9999 }
+        validators={ [] }
       />
       <TickButtonForm 
         name="isMain" 
@@ -531,7 +530,6 @@ const Details = ({s, hideNewSponsor}: {s: TSponsor, hideNewSponsor: Function}) =
         name="link"
         label="Link"
         placeholder="ejemplo.es"
-        type="text"
         validators={[]}
       />
       { renderFile() }

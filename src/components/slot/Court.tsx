@@ -79,7 +79,7 @@ const Details = ({court, handleSubmit, hideDetails}: {court: TCourt, handleSubmi
 
   return (
     <div id="courtDetails">
-      <TextInput name="name" placeholder="Exterior" value={ data.name } label="Nombre de la Pista" type="text" errors={ data.name ? [] : ["Provide name"] } onChange={ handleUpdateCourtName } />
+      <TextInput name="name" placeholder="Exterior" value={ data.name } label="Nombre de la Pista" errors={ data.name ? [] : ["Provide name"] } onChange={ handleUpdateCourtName } />
       <p className="extra-message">Tick day if is generally availiable</p>
       <div id="week" className="form-group">
         { data.week ? Object.entries(data.week).map( ([key, value]) => (

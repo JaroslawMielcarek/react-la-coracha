@@ -1,4 +1,4 @@
-import { TextInput } from "components/TextInput/TextInput"
+import { DateInput } from "components/TextInput/TextInput"
 import { FormContext } from "components/form/useFormState"
 import { SelectInput } from "components/selectInput/SelectInput"
 import { useContext, useEffect } from "react"
@@ -51,15 +51,14 @@ export const StrikeDateInput = ({strike, onChange}: TStrikeInputProps ) => {
   }
   return (
     <div>
-      <TextInput 
+      <DateInput
         name="date"
+        placeholder="01/08/2020"
+        label="Last Strike"
         value={ strike.lastStrike.toString() }
         onChange={ handleChange }
-        label="Last Strike"
-        type="date"
-        placeholder="01/08/2020"
         errors={ [] }
-        />
+      />
     </div>
   )
 }

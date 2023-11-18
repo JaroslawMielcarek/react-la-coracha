@@ -14,7 +14,7 @@ type propTypes = {
 }
 
 export const SelectInput = (props: propTypes) => {
-  const { renderErrors, hasError } = useError({errors: props.errors || [], name: props.name})
+  const { renderErrors, hasError } = useError({errors: [], name: props.name})
 
   if (!props.options) return <p className="no-data">Provide some options to select!</p>
   
@@ -43,7 +43,7 @@ export const SelectInput = (props: propTypes) => {
         <option value="" disabled>{props.label}</option>
         {options}
       </select>
-      {renderErrors()}
+      { renderErrors() }
     </div>
   )
 }

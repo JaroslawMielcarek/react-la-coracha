@@ -1,6 +1,6 @@
 import "./Profile.css"
 import Form from "components/form/Form"
-import { DatePickerInputForm, TextInputForm } from "components/TextInput/TextInput"
+import { DateInputForm, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { FormContext } from "components/form/useFormState"
 import { useFormState } from "components/form/useFormState"
 import { TickCustomValueForm } from "components/tickButton/TickButton"
@@ -220,7 +220,7 @@ const Details = ({p, handleSubmit, hideDetails}: {p: TPayment, handleSubmit: Fun
         </div>
         <div>
           <TextInputForm name="transferID" placeholder="0123456789" label="Referencia" validators={ [] } />
-          <DatePickerInputForm name="transferDate" label="Fecha en que hiciste la transferencia" max={ new Date().toISOString().split("T")[0] } validators={ [requiredValidator] } />
+          <DateInputForm name="transferDate" placeholder={ new Date().toDateString() } label="Fecha en que hiciste la transferencia" max={ new Date().toISOString().split("T")[0] } validators={ [requiredValidator] } />
         </div>
         <div className="buttons">
           { renderButtons() }
@@ -274,11 +274,13 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
         />
       </div>
       <div className="form-inline-elements">
-        <TextInputForm
+        <NumberInputForm
           name="number-value"
           label="Dorsal"
-          type="number"
-          validators={ [checkRangeValidator( 1, 99, false )] }
+          min={ 1 }
+          max={ 99 }
+          step={ 1 }
+          validators={ [] }
           placeholder="10"
         />
         <TickCustomValueForm
@@ -288,11 +290,13 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
         />
       </div>
       <div className="form-inline-elements">
-        <TextInputForm
+        <NumberInputForm
           name="height-value"
           label="Altura (m)"
-          type="number"
-          validators={ [checkRangeValidator( 1.5, 2.2, true )] }
+          min={ 1.5 }
+          max={ 2.2 }
+          step={ 0.1 }
+          validators={ [] }
           placeholder="1.80"
         />
         <TickCustomValueForm

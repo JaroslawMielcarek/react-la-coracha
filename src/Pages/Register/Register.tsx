@@ -49,7 +49,6 @@ export default function Register () {
           name="username"
           label="Usuario"
           placeholder="Usuario123"
-          type="text"
           validators={[requiredValidator, usernameValidator]}
         />
         <TextInputForm
