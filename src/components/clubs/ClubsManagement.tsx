@@ -11,6 +11,7 @@ import { TeamInputForm } from "components/TeamInput/TeamInput"
 import { IImage } from "shared/types"
 import { Table } from "components/table/Table"
 import { isTheSame } from "utils/object"
+import { useFetch } from "utils/useFetch"
 
 type TClubTeam = { name: string, gender: string } 
 
@@ -18,26 +19,18 @@ type TClub = {
   name: string,
   logo?: File | IImage,
   teams?: TClubTeam[],
-  pavilions?: string[]
+  pavilions?: string[],
+  _id?: string
 }
 
 
-const list = [{
-  name: "Just Voley",
-  logo: undefined,
-  teams: [{name: "A", gender: "Female" }, {name: "B", gender: "Female"}, {name: "A", gender: "Male"}],
-  pavilions: ["Colegio Concentrado San Jose, Malaga", "Divino Pastor, Malaga", "Otra Ubicacion, Estepona"]
-}]
 export const ClubsManagement = () => {
-  const [initList, setInitList] = useState<TClub[]>(list)
+  const [ clubs, sendData ] = useFetch<TClub[]>({ url: "moderator/getAllClubs", errorTitle: "Clubs Manager"})
   const [ selected, setSelected ] = useState<TClub | null>(null)
   
   const handleRemove = (club: TClub) => {
     const r = window.confirm("Are you sure you want remove?")
-    if (r) setInitList( initList.filter(l => l.name !== club.name ))
-  }
-  const handleSubmit = (club: TClub) => {
-    setInitList( [...initList.filter(l => l.name !== club.name), club ])
+    if (r) sendData("admin/deleteClub", club)
   }
 
   const Club = (club: TClub) => {
@@ -72,26 +65,25 @@ export const ClubsManagement = () => {
           <p className="column locations">Pabellones</p>
         </div>
         <ul>
-          { renderElements(initList || [])}
+          { renderElements(clubs || [])}
         </ul>
       </Table>
       { selected && <Modal onClose={() => setSelected(null)}>
-          <Details club={ selected } add={ handleSubmit } hideDetails={ () => setSelected(null) } />
+          <Details club={ selected } sendData={ sendData } hideDetails={ () => setSelected(null) } />
       </Modal>
       }
     </div>
   )
 }
 
-const Details = ({club, add, hideDetails}: {club: TClub, add: Function, hideDetails: Function}) => {
+const Details = ({club, sendData, hideDetails}: {club: TClub, sendData: Function, hideDetails: Function}) => {
   const initVal = {name: "", logo: undefined, teams: [], pavilions: []}
   const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState(club || initVal)
   
-  const onSubmit = () => {
+  const onSubmit = async() => {
     const data = formState.data
     if (!data) return null
-    add(data)
-    hideDetails()
+    if ( (club._id) ? await sendData("admin/updateClub", data) : await sendData("admin/createClub", data) ) hideDetails()
   }
 
   const renderFile = () => {
@@ -103,7 +95,7 @@ const Details = ({club, add, hideDetails}: {club: TClub, add: Function, hideDeta
     if (result) return <button type="button" className="btn full-width" onClick={() => hideDetails()}>Anular</button>
   
     return (<>
-        <button type="submit" className="btn full-widtg color">Update Location</button> 
+        <button type="submit" className="btn full-widtg color">{club._id ? "Modificar" : "Guardar"}</button> 
         <button type="button" className="btn color red" onClick={() => resetForm()}>Restablecer</button>
       </>)
   }

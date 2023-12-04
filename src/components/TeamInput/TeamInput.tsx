@@ -1,6 +1,7 @@
 import "./TeamInput.css"
 import { useState } from "react"
 import withForm from "components/form/withForm"
+import { useError } from "utils/useErrors"
 
 type TClubTeam = { name: string, gender: string }
 
@@ -12,7 +13,7 @@ function checkIfTeamExist(list: TClubTeam[]) {
     return false
   })
   if (!exist.length) return []
-  return ["Team with this name and gender already exist!"]
+  return ["El equipo con este nombre y género ya existe!"]
 }
 
 type propTypes = {
@@ -23,8 +24,8 @@ type propTypes = {
   onChange: Function
 }
 const TeamInput = (props: propTypes) => {
-  const [ errors, setErrors ] = useState<string[]>(props.errors)
-  const [ team, setTeam] = useState<TClubTeam>({name: "", gender: ""})
+  const { renderErrors, hasError, setErrors } = useError({errors: props.errors, name: props.name})
+  const [ team, setTeam ] = useState<TClubTeam>({name: "", gender: ""})
   const teams = props.value
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -49,23 +50,13 @@ const TeamInput = (props: propTypes) => {
     }
     setTeam({name: "", gender: ""})
   }
-  const renderErrors = () => {
-    if (!errors.length) return null
 
-    return <ul className="error-messages">{
-      errors.map((errMsg: string, i: number) => (
-        <li key={`${props.name}-error-${i}`} className="error">
-          {errMsg}
-        </li>
-      ))
-    }</ul>
-  }
   const renderButton = () => {
     const klass = (team.name !== "" && team.gender !== "") ? "btn" : "btn hidden"
     return <button type="button" className={ klass } onClick={() => handleSubmit() }>+</button>
   }
 
-  const klass = errors.length ? "form-group solid fit has-error" : "form-group solid fit"
+  const klass = hasError ? "form-group solid fit has-error" : "form-group solid fit"
 
   return (
 
@@ -93,7 +84,7 @@ const TeamInput = (props: propTypes) => {
       </div>
       { renderErrors() }
       <div className="teamsList">
-        { teams && teams.length && teams.map((t, index) => <span className={ t.gender.toLowerCase() } onClick={() => handleRemoveTeam(t)} key={index}>{ t.name }</span>) }
+        { teams && teams.length ? teams.map((t, index) => <span className={ t.gender.toLowerCase() } onClick={() => handleRemoveTeam(t)} key={index}>{ t.name }</span>) : null }
       </div>
     </fieldset>
   )
