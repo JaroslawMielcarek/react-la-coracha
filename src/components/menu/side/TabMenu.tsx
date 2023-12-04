@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import "./TabMenu.css"
 import CustomToolTip from "components/ToolTip/CustomToolTip"
 import { profileWoman, profileMan } from "assets/images/profile"
-import { homeIcon, settingsIcon, profileIcon, calendarIcon, dolarIcon, permissionIcon } from "assets/icons/icons"
+import { homeIcon, settingsIcon, profileIcon, calendarIcon, dolarIcon, permissionIcon, pageSettings } from "assets/icons/icons"
 import { useEffect, useState } from "react"
 import { TToolTipArguments } from "types"
 import { useContext } from "react"
@@ -117,6 +117,7 @@ export default function TabMenu () {
       <GroupTab isVisible={ isHamburgerOpen } name="admin__banner">
         <Tab icon={ dolarIcon } to='/finances' toolTip={ { text: "Condiciones financieras", direction: "right", delay: 3000 } } onClick={toggleHabmurger}/>
         <Tab icon={ permissionIcon } to='/permissions' toolTip={ { text: "Permisos otorgados a los usuarios", direction: "right", delay: 3500 } } onClick={toggleHabmurger}/>
+        <Tab icon={ pageSettings } to='/pageSettings' toolTip={ { text: "Establecer elementos utilizados en el sitio web.", direction: "right", delay: 4500 } } onClick={toggleHabmurger}/>
       </GroupTab>
     )
   }
