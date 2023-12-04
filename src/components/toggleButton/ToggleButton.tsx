@@ -1,13 +1,10 @@
 import React from "react"
-import withForm from "../form/withForm"
-import withOptions from "./withOptions"
+import withForm, { withExtraProps } from "../form/withForm"
 
 type propTypes = {
-    placeholder: string,
     name: string,
     value: string,
     label?: string,
-    type?: string,
     errors?: string[],
     onChange: Function,
     children?: React.ReactNode
@@ -27,7 +24,7 @@ export const ToggleButton = (props: propTypes) => {
 
   return (
     <div className={ klass } onClick={onClick}>
-      <label>{ props.label }</label>
+      { props.label ? <label>{ props.label }</label> : null }
       { props.children }
       <input
         name={ props.name }
@@ -39,5 +36,4 @@ export const ToggleButton = (props: propTypes) => {
   )
 }
 
-export const ToggleButtonForm = withForm(ToggleButton)
-export const ToggleButtonWithOptionsForm = withForm(withOptions(ToggleButton))
+export const ToggleButtonForm = withExtraProps(withForm(ToggleButton))

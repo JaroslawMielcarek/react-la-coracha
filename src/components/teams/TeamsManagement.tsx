@@ -139,9 +139,9 @@ const TeamDetails = ({t, sendData, hideDetails}: {t: TTeam, sendData: Function, 
       <TextInputForm name="name" label="Nombre" placeholder="Bees" validators={ [requiredValidator] }/>
       <TextInputForm name="league" label="Liga" placeholder="Afade" validators={ [] }/>
       <SelectInputForm name="gender" label="Género" options={["Female", "Male", "Mix"]} validators={ [requiredValidator] }/>
-      <SelectInputForm name="coach" label="Entrenador" options={clubPlayers?.filter(p => p.nick).map(p => p.nick)} validators={ [requiredValidator] }/>
-      <SelectInputForm name="assistant" label="Asistente" options={clubPlayers?.filter(p => p.nick).map(p => p.nick).concat("")} validators={ [] }/>
-      <TextAreaInputForm name="description" label="Descripción" placeholder="Descripción del equipo" validators={ [] }/>
+      <SelectInputForm name="coach" label="Entrenador" options={clubPlayers?.filter(p => p.nick).map(p => p.nick) || []} validators={ [requiredValidator] }/>
+      <SelectInputForm name="assistant" label="Asistente" options={clubPlayers?.filter(p => p.nick).map(p => p.nick).concat("") || []} validators={ [] }/>
+      <TextAreaInputForm name="description" label="Descripción" placeholder="Descripción del equipo" validators={ [] } />
       { renderFile() }
       <fieldset className="dashed">
         <legend>Jugadores del equipo - { t.players && ListFullness(t.players, '') }</legend>

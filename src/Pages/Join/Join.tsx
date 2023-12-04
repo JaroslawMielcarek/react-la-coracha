@@ -158,7 +158,6 @@ export default function Join()  {
           <SelectInputForm 
             name="gender"
             label="Género"
-            className={ selectedGender || "" }
             validators={[requiredValidator]}
             options={["Femenino", "Masculino"]}
             resetOnChange={["dateOfBirth"]}
