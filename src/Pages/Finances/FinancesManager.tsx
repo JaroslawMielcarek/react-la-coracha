@@ -10,7 +10,7 @@ import Modal from "components/modal/Modal"
 import Form from "components/form/Form"
 import { FormContext, useFormState } from "components/form/useFormState"
 import { FileUploadWithForm, ImagePreviewWithForm } from "components/imageUploadWithPreview/ImageUpload"
-import { NumberInput, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
+import { DateInput, DateInputForm, NumberInput, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { TickButton, TickButtonForm } from "components/tickButton/TickButton"
 import { SelectInput } from "components/selectInput/SelectInput"
 import { UserContext } from "utils/useUser"
@@ -106,37 +106,41 @@ const PlayersFinanceDownloader = () => {
   const regex = new RegExp(/^(20\d{2}|0(?!0)\d|[1-9]\d)-(1[0-2]|0[1-9])$/)
   const currentMonth = new Date().getMonth() + 1
   const currentYearMonth = ( new Date().getFullYear() ) + "-" + ( currentMonth < 10 ? `0${currentMonth}` : currentMonth )
-  const [downloadPeriod, setDownloadPeriod] = useState<TDownloadPeriod>({start: currentYearMonth, end: currentYearMonth})
 
-  const handleDownloadRaport = async () => {
+  const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState({start: currentYearMonth, end: currentYearMonth})
+
+  const handleDownloadRaport = () => {
     if (!players) return alert("There is no data to download!")
-    const p = DownloadReport(downloadPeriod, players)
+    const p = DownloadReport(formState.data as TDownloadPeriod, players)
     if (!p) return // Set notification dates are incorrect
     const ws = XLSX.utils.json_to_sheet(p)
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, "Players")
-    XLSX.writeFile(wb, `reportOf_${downloadPeriod.start}_${downloadPeriod.end}.xlsx`)
-  }
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    const propName = e.target.name
-    setDownloadPeriod(state => ({
-      ...state,
-      [propName]: val
-    }))
+    XLSX.writeFile(wb, `reportOf_${formState.data.start}_${formState.data.end}.xlsx`)
   }
   const renderButton = () => {
-    if (regex.test(downloadPeriod.start) && regex.test(downloadPeriod.end)) return <button className="btn color" onClick={ handleDownloadRaport }>Descargar</button>
+    if (!formState.data.start || !formState.data.end) return null
+    if (regex.test(formState.data.start.toString()) && regex.test(formState.data.end.toString())) return <button className="btn color" onClick={ handleDownloadRaport }>Descargar</button>
     return null
   }
   return (
-    <fieldset className="dashed fit" id="downloadPeriod">
-      <legend className="extra-message">Aquí puede elegir el período económico para descargar en formato de excel</legend>
-      <input className="monthPicker" name="start" type="month" min="2023-09" max={ currentYearMonth } placeholder="YYYY-MM" pattern="^(20\d{2}|0(?!0)\d|[1-9]\d)-(1[0-2]|0[1-9])$" value={downloadPeriod.start || ''} onChange={handleChange}/>
-      -
-      <input className="monthPicker" name="end" type="month" min={ downloadPeriod.start || currentYearMonth } max={ currentYearMonth } placeholder="YYYY-MM" pattern="^(20\d{2}|0(?!0)\d|[1-9]\d)-(1[0-2]|0[1-9])$" value={downloadPeriod.end || ''} onChange={handleChange}/>
-      { renderButton() }
-    </fieldset>
+
+    <FormContext.Provider value={ { formState, validate, registerInput, setFieldValue, resetForm } }>
+      <Form
+        id="datePicker-form"
+        className="datePicker-form"
+        onReset={() => {}}
+        onSubmit={() => {}}
+      >
+      <fieldset className="dashed fit" id="downloadPeriod">
+        <legend className="extra-message">Aquí puede elegir el período económico para descargar en formato de excel</legend>
+        <DateInputForm name="start" type="month" placeholder="2023-09" min={ currentYearMonth } max={ currentYearMonth } validators={ [] }/>
+        -
+        <DateInputForm name="end" type="month" placeholder="2023-09" min={ formState.data.start?.toString() || currentYearMonth } max={ currentYearMonth } validators={ [] }/>
+        { renderButton() }
+      </fieldset>
+      </Form>
+    </FormContext.Provider>
   )
 }
 

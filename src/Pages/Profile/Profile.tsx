@@ -3,7 +3,7 @@ import Form from "components/form/Form"
 import { DateInputForm, NumberInputForm, TextInputForm } from "components/TextInput/TextInput"
 import { FormContext } from "components/form/useFormState"
 import { useFormState } from "components/form/useFormState"
-import { TickCustomValueForm } from "components/tickButton/TickButton"
+import { TickButtonForm } from "components/tickButton/TickButton"
 import { SelectInputForm } from "components/selectInput/SelectInput"
 import { FileUploadWithForm, ImagePreviewWithForm } from "components/imageUploadWithPreview/ImageUpload"
 import { useContext, useEffect, useState } from "react"
@@ -267,7 +267,7 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
           validators={[requiredValidator]}
           placeholder="yarek"
         />
-        <TickCustomValueForm
+        <TickButtonForm
           name='nick-permisionGranted'
           label="Mostrar"
           validators={[]}
@@ -283,7 +283,7 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
           validators={ [] }
           placeholder="10"
         />
-        <TickCustomValueForm
+        <TickButtonForm
           name="number-permisionGranted"
           label="Mostrar"
           validators={[]}
@@ -299,7 +299,7 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
           validators={ [] }
           placeholder="1.80"
         />
-        <TickCustomValueForm
+        <TickButtonForm
           name='height-permisionGranted'
           label="Mostrar"
           validators={[]}
@@ -313,7 +313,7 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
           validators={ [checkRangeValidator( 30, 130, false )] }
           placeholder="65"
         />
-        <TickCustomValueForm
+        <TickButtonForm
           name='weight-permisionGranted'
           label="Mostrar"
           validators={[]}
@@ -326,7 +326,7 @@ const BasicInfo = ({p, sendData}: {p: TPlayer, sendData: Function}) => {
           validators={[]}
           options={['Derecha', 'Izquierda', 'Amobos']}
         />
-        <TickCustomValueForm
+        <TickButtonForm
           name='dominantHand-permisionGranted'
           label="Mostrar"
           validators={[]}

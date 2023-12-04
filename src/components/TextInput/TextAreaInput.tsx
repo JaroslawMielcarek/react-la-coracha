@@ -1,20 +1,24 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useError } from "utils/useErrors"
-import withForm from "../form/withForm"
+import withForm, { withExtraProps } from "../form/withForm"
 
 type propTypes = {
-    placeholder: string,
     name: string,
     value: string,
-    label: string,
+    label?: string,
     errors: string[],
     onChange: Function,
     rows?: number,
-    cols?: number
+    cols?: number,
+    placeholder: string,
   }
 
 export const TextAreaInput = (props: propTypes) => {
-  const { renderErrors, hasError } = useError({errors: props.errors, name: props.name})
+  const { renderErrors, hasError, setErrors } = useError({errors: props.errors, name: props.name})
+
+  useEffect( () => {
+    if (props.errors) setErrors(props.errors)
+  },[props.errors])
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value
@@ -24,8 +28,8 @@ export const TextAreaInput = (props: propTypes) => {
   const klass = hasError ? "form-group has-error" : "form-group"
 
   return (
-    <div className={klass}>
-      <label>{props.label}</label>
+    <div className={ klass }>
+      { props.label ? <label>{ props.label }</label> : null }
       <textarea
         name={ props.name }
         className="form-control"
@@ -35,9 +39,9 @@ export const TextAreaInput = (props: propTypes) => {
         rows={ props.rows }
         cols={ props.cols }
       />
-      {renderErrors()}
+      { renderErrors() }
     </div>
   )
 }
 
-export const TextAreaInputForm = withForm(TextAreaInput)
+export const TextAreaInputForm = withExtraProps(withForm(TextAreaInput))

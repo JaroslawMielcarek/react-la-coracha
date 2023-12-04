@@ -116,8 +116,8 @@ const Details = ({club, add, hideDetails}: {club: TClub, add: Function, hideDeta
           onReset={() => resetForm() }>
           <TextInputForm name="name" placeholder="La Coracha" label="Nombre" validators={ [requiredValidator] } />
           { renderFile() }
-          <TeamInputForm className="teamsInput" name="teams" label="Equipos" validators={ [] }/>
-          <PavilionsInputForm className="pavilionsInput" name="pavilions" label="Pabellones" validators={ [] }/>
+          <TeamInputForm  name="teams" label="Equipos" validators={ [] }/>
+          <PavilionsInputForm  name="pavilions" label="Pabellones" validators={ [] }/>
           <div className="buttons">
             { renderButtons() }
           </div>

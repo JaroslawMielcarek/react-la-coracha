@@ -1,25 +1,19 @@
 import { useContext, useEffect } from "react"
 import { FormContext } from "./useFormState"
 
-type WithFormPropsType = {
+export type WithFormPropsType = {
   name: string,
   validators: Function[],
-  placeholder?: string,
-  label?: string,
-  type?: string,
-  className?: string,
   onChange?: Function,
-  children?: React.ReactNode,
+  label?: string,
   // Fields Related
   resetOnChange?: string[],
   compare?: {to: string, errMsg: string},
-  // Select props
-  options?: string[],
-  // Toggle props
-  value?: string | number,
-  toggleValue?: string | number
-  isActive?: boolean
+  // Children
+  children?: React.ReactNode,
 }
+
+export const withExtraProps = (Comp: any) => <T,>(props: T) => <Comp {...props}/>
 export default function withForm(InputComponent: any) {
   const WrappedWithForm = (props: WithFormPropsType) => {
     const { formState, setFieldValue, registerInput } = useContext(FormContext)
@@ -37,12 +31,12 @@ export default function withForm(InputComponent: any) {
 
     return (
       <InputComponent
-        {...props}
-        errors={inputErrors}
-        value={inputValue}
-        onChange={onChange}
+        { ...props }
+        errors={ inputErrors }
+        value={ inputValue }
+        onChange={ onChange }
       >
-        {props.children}
+        { props.children }
       </InputComponent>
     )
   }
