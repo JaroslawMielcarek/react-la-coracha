@@ -134,12 +134,12 @@ export const TimeInput = (props: TimeInputPropTypes) => {
   const { renderErrors, hasError, setErrors } = useError({errors: props.errors, name: props.name})
 
   const validateTime = (val: string) => {
-    if (props.min && compareHoursMinutesStrings(val, props.min) === -1 ) {
-      setErrors(state => [...state, "To early!"])
+    if (props.min && ( compareHoursMinutesStrings(val, props.min) === -1) ) {
+      setErrors(["To early!"])
       return props.onChange(val)
     }
-    if (props.max && compareHoursMinutesStrings(val, props.max) === 1) {
-      setErrors(state => [...state, "To late!"])
+    if (props.max && ( compareHoursMinutesStrings(val, props.max) === 1) ) {
+      setErrors(["To late!"])
       return props.onChange(val)
     }
     setErrors([])
@@ -161,7 +161,7 @@ export const TimeInput = (props: TimeInputPropTypes) => {
         type="time"
         className="form-control"
         placeholder={ props.placeholder }
-        value={ props.value || "09:00" }
+        value={ props.value }
         step={ props.step || 120 }
         min={ props.min }
         max={ props.max }
@@ -274,16 +274,16 @@ export const DatesPicker = (props: propTypesDatePicker) => {
   const [ errors, setErrors ] = useState<string[]>([])
   
   const handleRemoveDate = (date: Date) => {
-    props.onChange(props.value.filter(d => d !== date))
+    props.onChange(props.value.filter(d => new Date(d).toLocaleDateString() !== new Date(date).toLocaleDateString()))
   }
   const onChange = (val: string) => {
     const date = new Date(val)
 
-    const exist = props.value.find(d => d.toLocaleDateString() === date.toLocaleDateString() )
+    const exist = props.value.find(d => new Date(d).toDateString() === new Date(date).toDateString() )
     
     if (exist) return setErrors( ["Date exist"])
     setErrors([])
-    props.onChange( [...props.value, date] )
+    props.onChange( [...props.value, val] )
     
     
   }
@@ -291,10 +291,8 @@ export const DatesPicker = (props: propTypesDatePicker) => {
     <fieldset className="form-group fit">
       <legend className="extra-message">{ props.label }</legend>
       <div id="datesList">
-      { props.value.length ? props.value.map(date => (
-        <div key={ date.toDateString() }>
-          <button className="btn" onClick={() => handleRemoveDate(date)}>{ date.toLocaleDateString() }</button>
-        </div>
+      { props.value.length ? props.value.sort( (a,b) => new Date(a).getTime() - new Date(b).getTime()).map(date => (
+        <button className="btn" onClick={() => handleRemoveDate(date)} key={ date.toString() }>{ new Date(date).toLocaleDateString() }</button>
       )): <p className="no-data">No hay ningua fecha prohibida</p>}
       </div>
       <fieldset className="solid fit form-group">

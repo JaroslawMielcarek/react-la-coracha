@@ -24,10 +24,13 @@ export type TLocation = {
 }
 
 export type TCourt = {
+  _id?: string,
   name: string,
   week: TWeek,
-  unAvailableDates?: Date[]
+  unAvailableDates?: Date[],
+  slots?: TDaySlots[]
 }
+
 export type TWeek = {
   [key in TEnglishDayName]: TDay | null
   // Monday: TDay | null,
@@ -44,7 +47,12 @@ export type TDay = {
   closeTime: string,
   slots: TSlot[]
 }
+export type TDaySlots = {
+  date: Date,
+  slots?: TSlot[]
+}
 export type TSlot = {
+  _id?: string,
   start: string,
   end: string,
   takenBy: string | undefined,

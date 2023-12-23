@@ -1,11 +1,6 @@
 import { useState } from "react"
 import { compareHoursMinutesStrings } from "utils/time"
-
-type TSlot = {
-  start: string,
-  end: string,
-  takenBy?: string,
-}
+import { TSlot } from "shared/types"
 
 export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, handleCancel}: {slot: TSlot, existingSlots: TSlot[], openTime: string, closeTime: string, addSlot: Function, handleCancel: Function}) => {
   const [data, setData ] = useState(slot)
@@ -36,7 +31,6 @@ export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, 
      const startColide = (name === "start") && ( compareHoursMinutesStrings(s.end, val) > 0 ) && ( compareHoursMinutesStrings(s.start, val) <= 0 )
      const endColide = (name === "end") && ( compareHoursMinutesStrings(s.start, val) < 0 ) && ( compareHoursMinutesStrings(s.end, val) >= 0 )
      const slotBetweenExist = ( compareHoursMinutesStrings(s.start, name === "start" ? val : data.start) > 0 ) && ( compareHoursMinutesStrings(s.end, name ==="end" ? val : data.end) < 0 )
-    //  console.log({startColide, endColide, slotBetweenExist}, s.end, val, data.start, data.end)
      return startColide || endColide || slotBetweenExist ? true : false
     })
 
@@ -81,22 +75,15 @@ export const SlotDetails = ({slot, openTime, existingSlots, closeTime, addSlot, 
   )
 }
 
-const currentUser = "CurrUser"
 export const SlotDisplay = ({slot, handleSlotToggle}: {slot: TSlot, handleSlotToggle: Function}) => {
-  const [ data, setData ] = useState<TSlot>(slot)
-
-  const handleToggle = (name: string) => {
-    if (!data.takenBy) return setData(state => ({...state, takenBy: name}))
-    if (data.takenBy && data.takenBy === currentUser) return setData(state => ({...state, takenBy: "" }))
-    return null
-  }
 
   let klass = "btn slot"
-  if (data.takenBy) klass += " color"
+  if (slot.takenBy) klass += " color"
+
   return (
-    <button type="button" className={ klass } onClick={() => handleToggle(currentUser)}>
-      <p>{ data.start } - { data.end }</p>
-      <p>{ data.takenBy ? data.takenBy : "Free" }</p>
+    <button type="button" className={ klass } onClick={() => handleSlotToggle()}>
+      <p>{ slot.start } - { slot.end }</p>
+      <p>{ slot.takenBy ? slot.takenBy : "Free" }</p>
     </button>
   )
 }

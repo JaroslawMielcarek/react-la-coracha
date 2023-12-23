@@ -37,18 +37,24 @@ export const CourtsInput = (props: propsTypes) => {
     const r = window.confirm(`Are you sure you want to remove ${court.name} court?! All information about it will be removed!`)
     if (r) props.onChange( courts.filter(c => c.name !== court.name))
   }
-  
-  return (<>
-      { !selected ? <button type="button" className="btn form-group" onClick={() => setSelected(initCourt)}>Add new Court</button> : null }
-      <label className="extra-message">Pistas</label>
-      { courts ?
-        sortedByPropName(courts, "name").map(c => (
+
+  const renderCourts = () => {
+    if (!courts || !courts.length) return null
+    return (<>
+        <label className="extra-message">Pistas</label>
+        { sortedByPropName(courts, "name").map(c => (
           <div className="court" key={ c.name }>
             <button type="button" className="btn color" onClick={() => setSelected(c)}>Editar</button>
             <p>{c.name}</p>
             <button type="button" className="btn color red remove" onClick={() => handleRemoveCourt(c)}>x</button>
-          </div>
-        )) : null }
+          </div> 
+        )) }
+      </>)
+  }
+  
+  return (<>
+      { !selected ? <button type="button" className="btn form-group" onClick={() => setSelected(initCourt)}>Add new Court</button> : null }
+      { renderCourts() }
       { selected ? <Modal onClose={() => setSelected(null)}>
           <Details court={ selected } handleSubmit={ handleSubmit } hideDetails={() => setSelected(null)}/> 
         </Modal> : null }
@@ -73,16 +79,16 @@ const Details = ({court, handleSubmit, hideDetails}: {court: TCourt, handleSubmi
   
   const renderButtons = () => {
     if (!data) return null
-    if ( data.name && allAvailableDaysHasTimeRange(data.week) && !allDataIsTheSame(data, court) ) return <button type="button" className="btn full-width color" onClick={() => onSubmit()}>Update Court</button>
+    if ( data.name && data.week && allAvailableDaysHasTimeRange(data.week) && !allDataIsTheSame(data, court) ) return <button type="button" className="btn full-width color" onClick={() => onSubmit()}>Update Court</button>
     return <button type="button" className="btn full-width" onClick={() => hideDetails() }>Anular</button>
   }
 
   return (
     <div id="courtDetails">
       <TextInput name="name" placeholder="Exterior" value={ data.name } label="Nombre de la Pista" errors={ data.name ? [] : ["Provide name"] } onChange={ handleUpdateCourtName } />
-      <p className="extra-message">Tick day if is generally availiable</p>
+      <p className="extra-message">Marque el día si está generalmente disponible</p>
       <div id="week" className="form-group">
-        { data.week ? Object.entries(data.week).map( ([key, value]) => (
+        { data && data.week ? Object.entries(data.week).map( ([key, value]) => (
           <fieldset className="dashed fit" key={ key }>
             <legend>
               <TickButton className="" label={ translateDayOfWeek(key as TEnglishDayName) } value={ !!value } onChange={ (val: boolean) => handleTickDay(key, val) } />
@@ -108,17 +114,16 @@ function allDataIsTheSame <T extends {}>(data: T, initData: T) {
 
 const Day = ({name, day, updateDay}: {name: string, day: TDay, updateDay: Function}) => {
   const [ selected, setSelected ] = useState<TSlot | null>(null)
-  const [ errors, setErrors ] = useState({openTime: day.openTime ? [] : ["Provide Time"], closeTime: day.closeTime ? [] : ["Provide Time"] })
   const [ data, setData ] = useState<TDay>(day)
   
   const handleUpdateDay = () => {
-    if (!errors.openTime.length && !errors.closeTime.length) updateDay( name, data)
+    if (data.openTime.length && data.closeTime.length) updateDay( name, data)
   }
   const handleSaveSlot = (updated: TSlot, old: TSlot) => {
     const existIndex = data.slots.findIndex(s => (s.start === old.start ) && (s.end === old.end) )
     // Add new slot otherwise update
-    if (existIndex < 0) return setData( state => ( { 
-        ...state, 
+    if (existIndex < 0) return setData( state => ( {
+        ...state,
         slots: [...data.slots, updated].sort((a: TSlot, b: TSlot) => compareHoursMinutesStrings(a.start, b.start))
       }) )
     
@@ -131,16 +136,11 @@ const Day = ({name, day, updateDay}: {name: string, day: TDay, updateDay: Functi
     if (r) setData( state => ( { ...state,  slots: data.slots.filter(s => ( s.start !== slot.start ) && ( s.end !== slot.end ) ) } ) )
   }
 
-  const handleHoursChange = (name: string, time: string, min?: string, max?: string) => {
-    const error: string[] = []
-    if (!time) error.push("Provide Time")
-    if ( min && compareHoursMinutesStrings(time, min) < 0) error.push("Is too early")
-    if ( max && compareHoursMinutesStrings(time, max) > 0) error.push("Is too late")
-    setErrors( state => ( { ...state, [name]: error } ) )
+  const handleHoursChange = (name: string, time: string) => {
     setData( state => ( { ...state, [name]: time } ) )
   }
   const renderSlots = () => {
-    if ( errors.openTime.length || errors.closeTime.length ) return null
+    if ( !data.openTime.length || !data.closeTime.length ) return null
     if (!data.slots.length) return (
       <div id="slotList">
         <button type="button" className="btn" onClick={() => setSelected( {start: data.openTime, end: "", takenBy: "" } )}>Add Slot</button>
@@ -171,9 +171,10 @@ const Day = ({name, day, updateDay}: {name: string, day: TDay, updateDay: Functi
     <div className="day">
       { renderButtons() }
       <div>
-        <TimeInput name="openTime" placeholder="16:30" value={ data.openTime } label="Opens at" min="10:00" max={ data.closeTime } errors={ errors.openTime } onChange={(val: string) => handleHoursChange("openTime", val, "10:00", data.closeTime) } />
+        <TimeInput name="openTime" placeholder="16:30" value={ data.openTime } label="Opens at" min="10:00" max={ data.closeTime } errors={ [] } onChange={(val: string) => handleHoursChange("openTime", val) } />
         { renderSlots() }
-        <TimeInput name="closeTime" placeholder="22:00" value={ data.closeTime } label="Close at" min={ data.openTime } max="22:00" errors={ errors.closeTime } onChange={(val: string) => handleHoursChange("closeTime", val, data.openTime, "22:00") } />
+        { /* we need to add minimum time tu min value */}
+        <TimeInput name="closeTime" placeholder="22:00" value={ data.closeTime } label="Close at" min={ data.openTime } max="22:00" errors={ [] } onChange={(val: string) => handleHoursChange("closeTime", val) } />
       </div>
       { selected && <Modal onClose={ () => setSelected(null) }>
         <SlotDetails slot={ selected } openTime={ data.openTime } closeTime={ data.closeTime } existingSlots={ data.slots } addSlot={ handleSaveSlot }  handleCancel={ () => setSelected(null) }/>
