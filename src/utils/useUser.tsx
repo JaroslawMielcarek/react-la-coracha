@@ -34,7 +34,6 @@ export const useUser = () => {
   const [user, setUser] = useState<UserType | null>(getLocalStoreUser())
   
   function linkUser() {
-    console.log('localstorage change')
     const ls = localStorage.getItem('user')
     ls ? setUser(JSON.parse(ls)) : setUser(null)
   }

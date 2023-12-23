@@ -7,6 +7,7 @@ import { PracticeManagement } from "components/practice/PracticeManagement"
 import { useContext, useEffect } from "react"
 import { UserContext } from "utils/useUser"
 import { useNavigate } from "react-router-dom"
+import { LocationsCalendars } from "components/locations/LocationCalendar"
 
 
 export const Manager = () => {
@@ -40,6 +41,10 @@ export const Manager = () => {
         <Tab label="Inscriptiones" key={'Inscriptiones'}>
           <p className="extra-message row">Administrar inscripciones al club</p>
           <EnrollmentManagement/>
+        </Tab>
+        <Tab label="Pistas" key={'PistasDisponibles'}>
+          <p className="extra-message row">Administrar pistas del club</p>
+          <LocationsCalendars/>
         </Tab>
       </Tabs>
     </section>

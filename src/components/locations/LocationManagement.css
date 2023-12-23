@@ -20,4 +20,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  margin: 8px 0;
+}
+#datesList .btn {
+  flex: 1 0 14%;
 }

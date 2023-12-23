@@ -1,14 +1,20 @@
 import "./LocationCalendar.css"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Modal from "components/modal/Modal"
 import { SlotDisplay } from "components/slot/Slot"
-import { TLocation, TSlot, TEnglishDayName } from "shared/types"
-import { getEnglishWeekDayName, getMonthName, getWeekShortName } from "utils/translate"
+import { TLocation, TSlot } from "shared/types"
+import { getMonthName, getWeekShortName } from "utils/translate"
 import { sortedByPropName } from "utils/sort"
+import { useFetch } from "utils/useFetch"
+import { UserContext } from "utils/useUser"
 
 type TCalendarCourt = {
+  _id?: string,
   name: string,
-  slots: TSlot[] | undefined,
+  slots?: {
+    date: Date,
+    slots?: TSlot[],
+  }[],
   unAvailableDates?: Date[]
 }
 type TCalendarDay = {
@@ -16,18 +22,20 @@ type TCalendarDay = {
   courts?: TCalendarCourt[]
 }
 
-export const LocationsCalendars = ({locations}: {locations: TLocation[]}) => {
+export const LocationsCalendars = () => {
+  const [ initList, sendData ] = useFetch<TLocation[]>({url: "moderator/getAllLocations", errorTitle: "Page Settings Courts download"})
+  
+  if (!initList) return (<p className="no-data">There is no Locations to display</p>)
   return (
     <div id="locationsCalendars">
-      { sortedByPropName(locations,"name").map( location => <LocationCalendar location={ location} key={ location.name }/> )}
+    { sortedByPropName(initList, "name").map( location => <LocationCalendar location={ location} sendData={ sendData} key={ location.name }/> )}
     </div>
   )
 }
 
-function daysInMonth (month: number, year: number): number {
-  return new Date(year, month + 1, 0).getDate()
-}
-function generateMonth(date: Date) {
+const daysInMonth = (month: number, year: number): number => new Date(year, month + 1, 0).getDate()
+
+function generateMonth(date: Date, location: TLocation) {
   const currMonth = date.getMonth()
   const currYear = date.getFullYear()
   const endDay = new Date(currYear, currMonth, daysInMonth(currMonth, currYear))
@@ -35,25 +43,30 @@ function generateMonth(date: Date) {
   const daysList = []
   let loop = new Date(currYear, currMonth, 1)
   while (loop <= endDay) {
-    daysList.push({ date: loop })
+    daysList.push(createCalendarDay(loop, location))
     loop = new Date(currYear, currMonth, loop.getDate() + 1 )
   }
   return daysList
 }
-function addSlotsToMonth(monthDays: { date: Date }[], location: TLocation ): TCalendarDay[] {
+function createCalendarDay(date: Date, location: TLocation) {
   const { courts } = location
-  if (!courts || !courts.length) return monthDays.map(d => ({ date: d.date }) )
-  const daysWithSlots = monthDays.map(day => {
-    const dayOfWeek = getEnglishWeekDayName(day.date.getDay())
-    const courtsAvailable = courts.filter(c => c.week[dayOfWeek as TEnglishDayName]).map(c => ({ name: c.name, slots: c.week[dayOfWeek as TEnglishDayName]?.slots, unAvailableDates: c.unAvailableDates }) )
-    const newDay: TCalendarDay = { date: day.date }
-    if (courtsAvailable.length) newDay.courts = courtsAvailable
-    return newDay
-  })
-  return daysWithSlots
+  const newDay: TCalendarDay = { date: date }
+
+  if (!courts || !courts.length) return newDay
+
+  const courtsAvailable = courts.reduce( (cumu, curr) => {
+    if (!curr.slots || !curr.slots.length) return cumu
+    const hasDay =  curr.slots.find(s => new Date(s.date).toDateString() === date.toDateString() )
+    if (hasDay && hasDay.slots?.length) return [...cumu, { _id: curr._id, name: curr.name, slots: [hasDay] }]
+    return cumu
+  },[] as TCalendarCourt[])
+  
+  if (courtsAvailable.length) newDay.courts = courtsAvailable
+  return newDay
 }
 
-export const LocationCalendar = ({location}: {location: TLocation}) => {
+export const LocationCalendar = ({location, sendData}: {location: TLocation, sendData: Function}) => {
+  const { username } = useContext(UserContext)
   const [ date, setDate ] = useState(new Date())
   const [ selected, setSelected ] = useState<TCalendarDay | null>(null)
 
@@ -65,30 +78,29 @@ export const LocationCalendar = ({location}: {location: TLocation}) => {
   const Day = ({day}: {day: TCalendarDay}) => {
     let klass = "prevent-selection day " + getWeekShortName(day.date.getDay())
 
-    
-    if (day.courts) return <button className={ klass + " btn" } onClick={() => setSelected(day)}>{ day.date.getDate() }</button>
+    if (day.courts?.filter(c => c.slots?.length).length) return <button className={ klass + " btn" } onClick={() => setSelected(day)}>{ day.date.getDate() }</button>
     return <span className={ klass }>{ day.date.getDate() }</span>
   }
   
   const Court = ({date, court}: {date: Date, court: TCalendarCourt}) => {
-
     let klass = "court dashed fit"
-    const isUnAvailable =  court.unAvailableDates?.find(d => d.toLocaleDateString() === date.toLocaleDateString())
-
-    console.log(date,  isUnAvailable )
-    if (isUnAvailable) klass += " disabled"
+    if (!court.slots?.length) klass += " disabled"
 
     return (
       <fieldset className={ klass }>
         <legend>{ court.name }</legend>
         <div id="slotList" >
-          { court.slots ? court.slots.map(slot => <SlotDisplay slot={ slot } handleSlotToggle={() => {}} key={ slot.start }/>) : null }
+          { court.slots ? court.slots.map(slot => slot.slots?.map(slot => <SlotDisplay slot={ slot } handleSlotToggle={() => handleToggleSlot(date, court, slot)} key={ slot.start }/>) )  : null }
         </div>
       </fieldset>
     )
   }
-  const handleToggleSlot = (slot: TSlot) => {
-
+  const handleToggleSlot = (date: Date, court: TCalendarCourt, slot: TSlot) => {
+    const data = { courtID: court._id, slotID: slot._id }
+    if (date.getTime() < new Date().getTime()) return alert("You can't change past")
+    if (slot.takenBy && slot.takenBy !== username() ) return alert("No puedes alternar las franjas horarias de otros")
+    sendData("moderator/toggleSlot", data)
+    setSelected(null)
   }
   return (
     <div id="locationCalendar">
@@ -108,7 +120,7 @@ export const LocationCalendar = ({location}: {location: TLocation}) => {
         <span className="prevent-selection D">D</span>
       </div>
       <div id="body">
-        { addSlotsToMonth(generateMonth(date), location).map((d, index) => <Day day={ d } key={ index } /> )}
+        { generateMonth(date, location).map((d, index) => <Day day={ d } key={ index } /> )}
       </div>
       { selected ? <Modal onClose={() => setSelected(null)}>
         <div>

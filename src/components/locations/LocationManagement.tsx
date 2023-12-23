@@ -7,49 +7,18 @@ import { Table } from "components/table/Table"
 import { useState } from "react"
 import { isTheSame } from "utils/object"
 import { requiredValidator } from "utils/validators"
-import { LocationsCalendars } from "./LocationCalendar"
 import Modal from "components/modal/Modal"
 import { TLocation } from "shared/types"
 import { sortedByPropName } from "utils/sort"
+import { useFetch } from "utils/useFetch"
 
-const list = [{
-  name: "IES Campanillas",
-  address: "Algo de campanillas",
-  courts: [
-    {
-      name: "Pista 1", 
-      week: { 
-        Monday: { openTime: "15:30", closeTime: "22:00", slots: [{ start: "16:30", end: "18:30", takenBy: ""}]},
-        Tuesday: null, Wednesday: null, Thursday: null, Friday: null, Saturday: null, Sunday: null 
-      }
-    },
-    {
-      name: "Pista 2", 
-      week: { 
-        Monday: { openTime: "15:30", closeTime: "22:00", slots: [{ start: "16:30", end: "18:30", takenBy: ""}]},
-        Tuesday: { openTime: "15:30", closeTime: "22:00", slots: [{ start: "16:30", end: "18:30", takenBy: ""}, { start: "18:30", end: "19:15", takenBy: "Angel"}, { start: "19:45", end: "21:11", takenBy: ""}]},
-        Wednesday: null, Thursday: null, Friday: null, Saturday: null, Sunday: null 
-      }
-    }
-  ]
-},
-{
-  name: "IES Divino Pastor",
-  address: "Algo de Malaga",
-  courts: [{name: "Pista", week: { Monday: { openTime: "15:30", closeTime: "22:00", slots: [{ start: "16:30", end: "18:30", takenBy: "Bob"}, { start: "18:30", end: "20:30", takenBy: ""}]},
-  Tuesday: null, Wednesday: null, Thursday: null, Friday: null, Saturday: null, Sunday: null }}]
-}]
 export const LocationManagement = () => {
-  // const [ initList, sendData ] = useFetch<TLocation[]>({url: "admin/getAllCourts", errorTitle: "Page Settings Courts download"})
- const [initList, setInitList] = useState<TLocation[]>(list)
+  const [ initList, sendData ] = useFetch<TLocation[]>({url: "admin/getAllLocations", errorTitle: "Page Settings Courts download"})
   const [ selected, setSelected ] = useState<TLocation | null>(null)
   
   const handleRemove = (location: TLocation) => {
-    const r = window.confirm("Are you sure you want remove?")
-    if (r) setInitList( initList.filter(l => l.name !== location.name ))
-  }
-  const handleSubmit = (location: TLocation) => {
-    setInitList( [...initList.filter(l => l.name !== location.name), location ])
+    const r = window.confirm("Estás seguro de que quieres eliminar?")
+    if (r) sendData("admin/deleteLocation", location)
   }
 
   const Location = (location: TLocation) => {
@@ -87,31 +56,26 @@ export const LocationManagement = () => {
         </ul>
       </Table>
       { selected ? <Modal onClose={() => setSelected(null)} >
-        <Details location={ selected } add={ handleSubmit } hideDetails={ () => setSelected(null) }/> 
+        <Details location={ selected } sendData={ sendData } hideDetails={ () => setSelected(null) }/> 
       </Modal> : null }
-      <h1>Disponibilidad de Pabellones</h1>
-      <p className="extra-message">Visible para entrenadores</p>
-      <LocationsCalendars locations={ initList }/>
     </div>
   )
 }
 
-const Details = ({location, add, hideDetails}: {location: TLocation, add: Function, hideDetails: Function}) => {
-  const initVal = {name: "", address: "", courts: []}
-  const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState(location || initVal)
+const Details = ({location, sendData, hideDetails}: {location: TLocation, sendData: Function, hideDetails: Function}) => {
+  const { formState, validate, registerInput, setFieldValue, resetForm } = useFormState(location)
   
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const data = formState.data
     if (!data) return null
-    add(data)
-    hideDetails()
+    if ( (location._id) ? await sendData("admin/updateLocation", data) : await sendData("admin/createLocation", data) ) hideDetails()
   }
   const renderButtons = () => {
     const result = Object.entries(formState.data).every( ([key, value]) => isTheSame(value, location[key as keyof typeof location]) )
     if (result) return <button type="button" className="btn full-width" onClick={() => hideDetails()}>Anular</button>
   
     return (<>
-        <button type="submit" className="btn full-widtg color">Update Location</button> 
+        <button type="submit" className="btn full-widtg color">{location._id ? "Modificar" : "Guardar"}</button> 
         <button type="button" className="btn color red" onClick={() => resetForm()}>Restablecer</button>
       </>)
   }
